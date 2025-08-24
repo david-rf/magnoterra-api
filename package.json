@@ -1,12 +1,42 @@
 {
   "name": "magnoterra-api",
   "version": "1.0.0",
+  "description": "Magno Terra E-commerce API",
   "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=20.x"
+  },
   "scripts": {
-    "start": "node index.js"
+    "start": "node start-railway.js",
+    "dev": "nodemon index.js",
+    "railway": "node start-railway.js",
+    "lint": "eslint .",
+    "format": "prettier -w .",
+    "test": "vitest --run",
+    "typecheck": "tsc -v || echo 'skip (js)'"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "mysql2": "^3.9.2"
-  }
+    "mysql2": "^3.9.2",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "zod": "^3.22.4",
+    "pino": "^8.17.2",
+    "pino-pretty": "^10.3.1",
+    "express-rate-limit": "^7.1.5"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "@eslint/js": "^8.56.0",
+    "prettier": "^3.1.1",
+    "vitest": "^1.1.0",
+    "supertest": "^6.3.3",
+    "nodemon": "^3.0.2"
+  },
+  "keywords": ["ecommerce", "api", "nodejs", "express", "mysql"],
+  "author": "Magno Terra Team",
+  "license": "MIT"
 }
