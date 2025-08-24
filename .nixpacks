@@ -2,7 +2,7 @@
 nixPkgs = ['nodejs_20', 'npm']
 
 [phases.install]
-cmds = ['npm ci --only=production']
+cmds = ['npm install --production']
 
 [phases.build]
 cmds = ['echo "Build completed"']
