@@ -1,6 +1,7 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import contentFeedRouter from './contentFeed.js';
 
 const router = express.Router();
 
@@ -27,6 +28,8 @@ router.get('/db-check', asyncHandler(async (req, res) => {
   }
 }));
 
+router.use('/content-feed', contentFeedRouter);
+
 // API info
 router.get('/', (req, res) => {
   res.json({
@@ -37,6 +40,8 @@ router.get('/', (req, res) => {
       health: '/health',
       dbCheck: '/db-check',
       api: '/api',
+      contentFeed: '/api/content-feed',
+      contentFeedStatus: '/api/content-feed/status',
     },
   });
 });

@@ -11,6 +11,10 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url('DATABASE_URL must be a valid URL'),
   MP_PUBLIC_KEY: z.string().optional(),
   MP_ACCESS_TOKEN: z.string().optional(),
+  CONTENT_FEED_INTERVAL_MS: z
+    .string()
+    .optional()
+    .transform((value) => (value ? Number(value) : 60_000)),
 });
 
 // Validate environment variables
