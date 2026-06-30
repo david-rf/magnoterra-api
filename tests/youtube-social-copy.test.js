@@ -26,7 +26,12 @@ const extractSection = (markdown, label) => {
 
 describe('youtube upload batch social copy', () => {
   it('returns NO_VIDEOS for empty payloads', () => {
-    expect(buildYoutubeUploadBatchMarkdown({ event: 'youtube_upload_batch', videos: [] })).toBe('NO_VIDEOS');
+    expect(
+      buildYoutubeUploadBatchMarkdown({
+        event: 'youtube_upload_batch',
+        videos: [],
+      })
+    ).toBe('NO_VIDEOS');
     expect(buildYoutubeUploadBatchMarkdown({})).toBe('NO_VIDEOS');
   });
 
@@ -55,9 +60,13 @@ describe('youtube upload batch social copy', () => {
     expect(instagramCaption.length).toBeLessThanOrEqual(INSTAGRAM_MAX_LENGTH);
     expect(linkedInCopy).toContain(CONTACT_CTA);
     expect(linkedInCopy).toContain(LINKEDIN_HASHTAGS);
-    expect(markdown).not.toMatch(/\b\d+(?:[.,]\d+)?\s*(?:\u03a9|ohm(?:s|ios)?|omega)\b/i);
+    expect(markdown).not.toMatch(
+      /\b\d+(?:[.,]\d+)?\s*(?:\u03a9|ohm(?:s|ios)?|omega)\b/i
+    );
     expect(markdown).not.toMatch(/\bSEC\b/i);
-    expect(markdown).toContain('RIC N06 se evalua segun corresponda al proyecto');
+    expect(markdown).toContain(
+      'RIC N06 se evalua segun corresponda al proyecto'
+    );
   });
 
   it('responds with markdown from POST /api/webhooks', async () => {
@@ -77,7 +86,9 @@ describe('youtube upload batch social copy', () => {
 
     expect(response.status).toBe(200);
     expect(response.headers['content-type']).toContain('text/markdown');
-    expect(response.text).toContain('https://www.youtube.com/watch?v=fallback-id');
+    expect(response.text).toContain(
+      'https://www.youtube.com/watch?v=fallback-id'
+    );
     expect(response.text).toContain('magnoterra.cl/contacto');
   });
 });

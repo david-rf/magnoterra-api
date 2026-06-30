@@ -33,17 +33,23 @@ export const sanitizeMarketingText = (value) => {
   }
 
   return collapseWhitespace(value)
-    .replace(/\b\d+(?:[.,]\d+)?\s*(?:\u03a9|ohm(?:s|ios)?|omega)\b/gi, 'medicion tecnica')
-    .replace(/\b(?:certificaci(?:o|\u00f3)n|certificado|cert\.?)\s*(?:de\s*)?SEC\b/gi, 'cumplimiento normativo')
+    .replace(
+      /\b\d+(?:[.,]\d+)?\s*(?:\u03a9|ohm(?:s|ios)?|omega)\b/gi,
+      'medicion tecnica'
+    )
+    .replace(
+      /\b(?:certificaci(?:o|\u00f3)n|certificado|cert\.?)\s*(?:de\s*)?SEC\b/gi,
+      'cumplimiento normativo'
+    )
     .replace(/\bSEC\b/gi, 'normativa aplicable')
     .replace(/\b(?:\u03a9|ohm(?:s|ios)?|omega)\b/gi, 'resistencia')
     .trim();
 };
 
 const extractObjectJobText = (job) => {
-  const values = JOB_TEXT_KEYS
-    .map((key) => job[key])
-    .filter((value) => typeof value === 'string' || typeof value === 'number');
+  const values = JOB_TEXT_KEYS.map((key) => job[key]).filter(
+    (value) => typeof value === 'string' || typeof value === 'number'
+  );
 
   return values.join(' - ');
 };
@@ -128,4 +134,9 @@ export const buildYoutubeUploadBatchMarkdown = (payload) => {
     .join('\n\n---\n\n');
 };
 
-export { CONTACT_CTA, LINKEDIN_HASHTAGS, LINKEDIN_MAX_LENGTH, INSTAGRAM_MAX_LENGTH };
+export {
+  CONTACT_CTA,
+  LINKEDIN_HASHTAGS,
+  LINKEDIN_MAX_LENGTH,
+  INSTAGRAM_MAX_LENGTH,
+};
