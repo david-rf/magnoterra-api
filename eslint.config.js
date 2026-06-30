@@ -22,6 +22,12 @@ export default [
         clearInterval: 'readonly',
         setImmediate: 'readonly',
         clearImmediate: 'readonly',
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        vi: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
       },
     },
     rules: {
@@ -31,10 +37,6 @@ export default [
       'no-var': 'error',
       'object-shorthand': 'error',
       'prefer-template': 'error',
-    },
-    env: {
-      node: true,
-      es2022: true,
     },
   },
 ];
