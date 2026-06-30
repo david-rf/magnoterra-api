@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import request from 'supertest';
 import app from '../index.js';
-import { INSTAGRAM_CAPTION, LINKEDIN_COPY } from '../src/social/youtubeUploadBatch.js';
+import {
+  INSTAGRAM_CAPTION,
+  LINKEDIN_COPY,
+} from '../src/social/youtubeUploadBatch.js';
 
 describe('YouTube upload batch webhook', () => {
   it('returns markdown copy for each uploaded video', async () => {
@@ -34,7 +37,7 @@ describe('YouTube upload batch webhook', () => {
         `1) URL: https://youtu.be/def456`,
         `2) Copy LinkedIn empresa: ${LINKEDIN_COPY}`,
         `3) Caption Instagram: ${INSTAGRAM_CAPTION}`,
-      ].join('\n'),
+      ].join('\n')
     );
   });
 
@@ -61,7 +64,9 @@ describe('YouTube upload batch webhook', () => {
     expect(LINKEDIN_COPY).toContain('magnoterra.cl/contacto');
     expect(LINKEDIN_COPY).toContain('#PuestaATierra #Chile #MagnoTerra');
     expect(LINKEDIN_COPY).toContain('RIC N06 cuando corresponde al proyecto');
-    expect(INSTAGRAM_CAPTION).toContain('RIC N06 cuando corresponde al proyecto');
+    expect(INSTAGRAM_CAPTION).toContain(
+      'RIC N06 cuando corresponde al proyecto'
+    );
 
     for (const pattern of forbiddenPatterns) {
       expect(LINKEDIN_COPY).not.toMatch(pattern);
