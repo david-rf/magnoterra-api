@@ -11,11 +11,13 @@ El proyecto Magno Terra API ha sido completamente auditado y configurado para el
 ## ✅ Checklist de Auditoría
 
 ### 🟢 Node.js y Versiones
+
 - [x] **.nvmrc** creado con Node.js 20
 - [x] **package.json** actualizado con engines >=20.x
 - [x] **type: "module"** configurado para ES modules
 
 ### 🟢 Dependencias y Scripts
+
 - [x] **Dependencias core**: express, mysql2, dotenv, cors, helmet, morgan
 - [x] **Validación**: zod implementado
 - [x] **Logging**: pino + pino-pretty configurado
@@ -25,6 +27,7 @@ El proyecto Magno Terra API ha sido completamente auditado y configurado para el
 - [x] **Scripts**: start, dev, lint, format, test, typecheck
 
 ### 🟢 Estructura del Proyecto
+
 - [x] **src/config/env.js** - Validación de variables con Zod
 - [x] **src/db/pool.js** - Pool MySQL con retry exponencial
 - [x] **src/middlewares/** - Error handling y 404
@@ -34,6 +37,7 @@ El proyecto Magno Terra API ha sido completamente auditado y configurado para el
 - [x] **tests/** - Tests básicos con Vitest + Supertest
 
 ### 🟢 Configuración y Herramientas
+
 - [x] **ESLint** - Configuración moderna con @eslint/js
 - [x] **Prettier** - Formateo de código
 - [x] **EditorConfig** - Consistencia entre editores
@@ -41,6 +45,7 @@ El proyecto Magno Terra API ha sido completamente auditado y configurado para el
 - [x] **env.example** - Variables de entorno de ejemplo
 
 ### 🟢 Seguridad y DX
+
 - [x] **Helmet** - Headers de seguridad
 - [x] **CORS** - Configurado (temporalmente * para MVP)
 - [x] **Rate Limiting** - 100 requests/IP cada 15 min
@@ -49,6 +54,7 @@ El proyecto Magno Terra API ha sido completamente auditado y configurado para el
 - [x] **Logging** - Pino con formato pretty en dev
 
 ### 🟢 Testing
+
 - [x] **Vitest** - Framework de testing configurado
 - [x] **Supertest** - Testing de endpoints HTTP
 - [x] **health.test.js** - Tests del health check
@@ -56,17 +62,20 @@ El proyecto Magno Terra API ha sido completamente auditado y configurado para el
 - [x] **vitest.config.js** - Configuración de testing
 
 ### 🟢 Docker y CI/CD
+
 - [x] **Dockerfile** - Imagen Node.js 20-alpine con healthcheck
 - [x] **docker-compose.yml** - Orquestación local con MySQL
 - [x] **CI/CD** - GitHub Actions con jobs: install → lint → format → test → build
 
 ### 🟢 Railway y Despliegue
+
 - [x] **Variables de entorno** - DATABASE_URL, PORT, MP_*
 - [x] **Health Check** - Endpoint /health para Railway
 - [x] **Base de datos** - Pool MySQL con retry y graceful shutdown
 - [x] **Logs** - Pino para agregación en Railway
 
 ### 🟢 Mercado Pago (Pre-setup)
+
 - [x] **Placeholder** - Estructura básica sin SDK
 - [x] **Endpoints futuros** - /payments/create-preference, /webhooks/mp
 - [x] **Checklist** - Webhooks y validación de firmas documentados
@@ -74,6 +83,7 @@ El proyecto Magno Terra API ha sido completamente auditado y configurado para el
 ## 📁 Archivos Creados/Modificados
 
 ### ✨ Nuevos Archivos
+
 ```
 ✅ .nvmrc
 ✅ .gitignore
@@ -100,6 +110,7 @@ El proyecto Magno Terra API ha sido completamente auditado y configurado para el
 ```
 
 ### 🔄 Archivos Modificados
+
 ```
 ✅ package.json - Completamente reescrito con todas las dependencias
 ✅ index.js - Reescrito con middleware de seguridad y estructura completa
@@ -109,39 +120,46 @@ El proyecto Magno Terra API ha sido completamente auditado y configurado para el
 ## 🚀 Comandos para Ejecutar
 
 ### 1. Instalar Node.js (si no está disponible)
+
 ```powershell
 # Ejecutar como administrador
 .\install-node.ps1
 ```
 
 ### 2. Instalar dependencias
+
 ```bash
 npm install
 ```
 
 ### 3. Configurar variables de entorno
+
 ```bash
 cp env.example .env
 # Editar .env con tus credenciales
 ```
 
 ### 4. Ejecutar en desarrollo
+
 ```bash
 npm run dev
 ```
 
 ### 5. Verificar instalación
+
 ```bash
 curl http://localhost:3000/health
 # Debe retornar: {"status":"OK",...}
 ```
 
 ### 6. Ejecutar tests
+
 ```bash
 npm test
 ```
 
 ### 7. Lint y formateo
+
 ```bash
 npm run lint
 npm run format
@@ -150,11 +168,13 @@ npm run format
 ## 🐳 Docker (Opcional)
 
 ### Desarrollo local
+
 ```bash
 docker-compose up -d
 ```
 
 ### Construir imagen
+
 ```bash
 docker build -t magnoterra-api .
 ```
@@ -162,10 +182,12 @@ docker build -t magnoterra-api .
 ## 🚀 Despliegue en Railway
 
 ### 1. Conectar repositorio
+
 - Conectar GitHub a Railway
 - Configurar región: `us-west2`
 
 ### 2. Variables de entorno
+
 ```env
 DATABASE_URL=${{ MySQL.MYSQL_URL }}
 PORT=3000
@@ -175,6 +197,7 @@ MP_ACCESS_TOKEN=APP_USR-xxx
 ```
 
 ### 3. Health Check
+
 - **Path**: `/health`
 - **Timeout**: 30s
 
@@ -204,21 +227,25 @@ MP_ACCESS_TOKEN=APP_USR-xxx
 ## 🔮 Próximos Pasos
 
 ### 1. Inmediato
+
 - [ ] Instalar Node.js (ejecutar install-node.ps1)
 - [ ] Configurar .env con credenciales reales
 - [ ] Probar endpoints localmente
 
 ### 2. Desarrollo
+
 - [ ] Implementar modelos de datos (usuarios, productos, órdenes)
 - [ ] Crear endpoints CRUD básicos
 - [ ] Implementar autenticación JWT
 
 ### 3. Mercado Pago
+
 - [ ] Instalar SDK: `npm install mercadopago`
 - [ ] Implementar creación de preferencias
 - [ ] Configurar webhooks y validación
 
 ### 4. Producción
+
 - [ ] Configurar dominio personalizado
 - [ ] Implementar SSL/TLS
 - [ ] Configurar monitoreo y alertas
@@ -238,6 +265,7 @@ MP_ACCESS_TOKEN=APP_USR-xxx
 **PROYECTO LISTO PARA DESARROLLO** 🚀
 
 El MVP de Magno Terra API está completamente configurado con:
+
 - ✅ Arquitectura moderna y escalable
 - ✅ Seguridad implementada
 - ✅ Testing configurado
@@ -256,4 +284,4 @@ El MVP de Magno Terra API está completamente configurado con:
 ---
 
 **Magno Terra Team** 🚀  
-*Proyecto auditado y listo para desarrollo*
+_Proyecto auditado y listo para desarrollo_
