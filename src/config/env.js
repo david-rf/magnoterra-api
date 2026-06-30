@@ -13,7 +13,13 @@ const envSchema = z.object({
   MP_ACCESS_TOKEN: z.string().optional(),
 });
 
+const envInput = {
+  ...process.env,
+  DATABASE_URL: process.env.DATABASE_URL
+    || (process.env.NODE_ENV === 'test' ? 'mysql://test:test@localhost:3306/test' : undefined),
+};
+
 // Validate environment variables
-const env = envSchema.parse(process.env);
+const env = envSchema.parse(envInput);
 
 export default env;

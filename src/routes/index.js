@@ -1,6 +1,7 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import { buildYoutubeUploadBatchMarkdown } from '../social/youtubeUploadBatch.js';
 
 const router = express.Router();
 
@@ -37,8 +38,14 @@ router.get('/', (req, res) => {
       health: '/health',
       dbCheck: '/db-check',
       api: '/api',
+      youtubeUploadBatchWebhook: '/api/webhooks/youtube-upload-batch',
     },
   });
+});
+
+router.post('/webhooks/youtube-upload-batch', (req, res) => {
+  const markdown = buildYoutubeUploadBatchMarkdown(req.body);
+  res.set('Content-Type', 'text/markdown; charset=utf-8').send(markdown);
 });
 
 export default router;
