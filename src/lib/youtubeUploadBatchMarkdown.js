@@ -70,17 +70,15 @@ export const buildYoutubeUploadBatchMarkdown = (payload) => {
   }
 
   return videos
-    .map((video, index) =>
+    .map((video) =>
       [
-        `### Video ${index + 1}`,
-        '',
         `1) URL: <${video.url}>`,
         '',
-        '2) Copy LinkedIn empresa (<=900 chars):',
+        '2) Copy LinkedIn empresa:',
         '',
         linkedInCopy(),
         '',
-        '3) Caption Instagram (<=500 chars):',
+        '3) Caption Instagram:',
         '',
         instagramCaption(),
       ].join('\n')

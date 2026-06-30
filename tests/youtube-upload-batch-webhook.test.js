@@ -37,9 +37,7 @@ describe('YouTube upload batch webhook', () => {
       });
 
     expect(response.status).toBe(200);
-    expect(response.text).toContain('### Video 1');
     expect(response.text).toContain('1) URL: <https://youtu.be/abc123>');
-    expect(response.text).toContain('### Video 2');
     expect(response.text).toContain(
       '1) URL: <https://www.youtube.com/watch?v=fallback-id>'
     );
@@ -50,10 +48,10 @@ describe('YouTube upload batch webhook', () => {
   it('keeps generated copy within requested limits and avoids forbidden claims', () => {
     const markdown = buildYoutubeUploadBatchMarkdown(payload);
     const linkedInCopy = markdown.match(
-      /2\) Copy LinkedIn empresa \(<=900 chars\):\n\n([\s\S]*?)\n\n3\)/
+      /2\) Copy LinkedIn empresa:\n\n([\s\S]*?)\n\n3\)/
     )?.[1];
     const instagramCaption = markdown.match(
-      /3\) Caption Instagram \(<=500 chars\):\n\n([\s\S]*)$/
+      /3\) Caption Instagram:\n\n([\s\S]*)$/
     )?.[1];
 
     expect(linkedInCopy).toBeDefined();
