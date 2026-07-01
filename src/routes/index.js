@@ -1,8 +1,25 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import {
+  buildYoutubeUploadBatchMarkdown,
+  NO_VIDEOS_RESPONSE,
+} from '../social/youtubeUploadBatch.js';
 
 const router = express.Router();
+
+const handleYoutubeUploadBatch = (req, res) => {
+  const payload = req.body;
+  const hasPayload = payload && Object.keys(payload).length > 0;
+
+  if (hasPayload && payload.event !== 'youtube_upload_batch') {
+    return res.type('text/markdown').send(NO_VIDEOS_RESPONSE);
+  }
+
+  const markdown = buildYoutubeUploadBatchMarkdown(req.body);
+
+  res.type('text/markdown').send(markdown);
+};
 
 // Health check endpoint
 router.get('/health', (req, res) => {
@@ -37,8 +54,12 @@ router.get('/', (req, res) => {
       health: '/health',
       dbCheck: '/db-check',
       api: '/api',
+      youtubeUploadBatchWebhook: '/api/webhooks/youtube-upload-batch',
     },
   });
 });
+
+router.post('/webhooks', handleYoutubeUploadBatch);
+router.post('/webhooks/youtube-upload-batch', handleYoutubeUploadBatch);
 
 export default router;
