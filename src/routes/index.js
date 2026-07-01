@@ -1,8 +1,19 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import {
+  isYoutubeUploadBatchEvent,
+  renderYoutubeUploadBatchMarkdown,
+} from '../social/youtubeUploadBatch.js';
 
 const router = express.Router();
+
+const sendYoutubeUploadBatchMarkdown = (req, res) => {
+  res
+    .status(200)
+    .type('text/markdown')
+    .send(renderYoutubeUploadBatchMarkdown(req.body));
+};
 
 // Health check endpoint
 router.get('/health', (req, res) => {
@@ -40,5 +51,16 @@ router.get('/', (req, res) => {
     },
   });
 });
+
+router.post('/webhooks', (req, res) => {
+  if (isYoutubeUploadBatchEvent(req.body) || !req.body?.event) {
+    return sendYoutubeUploadBatchMarkdown(req, res);
+  }
+
+  return res.status(400).type('text/markdown').send('UNSUPPORTED_EVENT');
+});
+
+router.post('/webhooks/youtube-upload-batch', sendYoutubeUploadBatchMarkdown);
+router.post('/webhooks/youtube_upload_batch', sendYoutubeUploadBatchMarkdown);
 
 export default router;
