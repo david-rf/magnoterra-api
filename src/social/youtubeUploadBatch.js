@@ -34,8 +34,7 @@ const extractJobText = (job) => {
   }
 
   if (job && typeof job === 'object' && !Array.isArray(job)) {
-    return JOB_TEXT_KEYS
-      .map((key) => job[key])
+    return JOB_TEXT_KEYS.map((key) => job[key])
       .filter((value) => typeof value === 'string' || typeof value === 'number')
       .join(' - ');
   }
@@ -49,8 +48,14 @@ export const sanitizeMarketingText = (value) => {
   }
 
   return collapseWhitespace(value)
-    .replace(/\b\d+(?:[.,]\d+)?\s*(?:ohm(?:s|ios?)?|omega|[\u03a9\u03c9])\b/gi, 'medicion tecnica')
-    .replace(/\b(?:cert(?:ificacion|ificado)?|cert\.?)\s*(?:de\s*)?SEC\b/gi, 'cumplimiento normativo')
+    .replace(
+      /\b\d+(?:[.,]\d+)?\s*(?:ohm(?:s|ios?)?|omega|[\u03a9\u03c9])\b/gi,
+      'medicion tecnica'
+    )
+    .replace(
+      /\b(?:cert(?:ificacion|ificado)?|cert\.?)\s*(?:de\s*)?SEC\b/gi,
+      'cumplimiento normativo'
+    )
     .replace(/\bSEC\b/gi, 'normativa aplicable')
     .replace(/\bRIC\s*N\s*0?6\b/gi, 'RIC N06 segun corresponda al proyecto')
     .replace(/\s{2,}/g, ' ')
@@ -127,7 +132,9 @@ export const buildYoutubeUploadBatchMarkdown = (payload = {}) => {
   const videos = Array.isArray(payload?.videos) ? payload.videos : [];
   const renderedVideos = videos.map(renderVideoMarkdown).filter(Boolean);
 
-  return renderedVideos.length > 0 ? renderedVideos.join('\n\n---\n\n') : 'NO_VIDEOS';
+  return renderedVideos.length > 0
+    ? renderedVideos.join('\n\n---\n\n')
+    : 'NO_VIDEOS';
 };
 
 export const youtubeUploadBatchLimits = {

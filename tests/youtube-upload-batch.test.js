@@ -34,9 +34,12 @@ describe('youtube_upload_batch webhook markdown', () => {
   it('returns NO_VIDEOS when the payload is empty', () => {
     expect(buildYoutubeUploadBatchMarkdown({})).toBe('NO_VIDEOS');
     expect(buildYoutubeUploadBatchMarkdown()).toBe('NO_VIDEOS');
-    expect(buildYoutubeUploadBatchMarkdown({ event: 'youtube_upload_batch', videos: [] })).toBe(
-      'NO_VIDEOS'
-    );
+    expect(
+      buildYoutubeUploadBatchMarkdown({
+        event: 'youtube_upload_batch',
+        videos: [],
+      })
+    ).toBe('NO_VIDEOS');
   });
 
   it('renders URL, LinkedIn copy and Instagram caption for each video', () => {
@@ -56,7 +59,9 @@ describe('youtube_upload_batch webhook markdown', () => {
     });
 
     expect(markdown).toContain('1) URL\nhttps://youtu.be/abc123');
-    expect(markdown).toContain('1) URL\nhttps://www.youtube.com/watch?v=def456');
+    expect(markdown).toContain(
+      '1) URL\nhttps://www.youtube.com/watch?v=def456'
+    );
     expect(markdown.match(/2\) Copy LinkedIn empresa/g)).toHaveLength(2);
     expect(markdown.match(/3\) Caption Instagram/g)).toHaveLength(2);
     expect(markdown).toContain('\n\n---\n\n');
@@ -72,11 +77,19 @@ describe('youtube_upload_batch webhook markdown', () => {
     const linkedInCopy = buildLinkedInCopy(video);
     const instagramCaption = buildInstagramCaption(video);
 
-    expect(linkedInCopy.length).toBeLessThanOrEqual(youtubeUploadBatchLimits.linkedIn);
-    expect(instagramCaption.length).toBeLessThanOrEqual(youtubeUploadBatchLimits.instagram);
+    expect(linkedInCopy.length).toBeLessThanOrEqual(
+      youtubeUploadBatchLimits.linkedIn
+    );
+    expect(instagramCaption.length).toBeLessThanOrEqual(
+      youtubeUploadBatchLimits.instagram
+    );
     expect(linkedInCopy).toContain(youtubeUploadBatchConstants.contactCta);
-    expect(linkedInCopy).toContain(youtubeUploadBatchConstants.requiredHashtags);
-    expect(instagramCaption).toContain(youtubeUploadBatchConstants.requiredHashtags);
+    expect(linkedInCopy).toContain(
+      youtubeUploadBatchConstants.requiredHashtags
+    );
+    expect(instagramCaption).toContain(
+      youtubeUploadBatchConstants.requiredHashtags
+    );
   });
 
   it('removes restricted Omega figures and SEC certification claims', () => {
@@ -97,8 +110,12 @@ describe('youtube_upload_batch webhook markdown', () => {
     const instagramCaption = extractSection(markdown, '3) Caption Instagram');
 
     for (const copy of [linkedInCopy, instagramCaption]) {
-      expect(copy).not.toMatch(/\b\d+(?:[.,]\d+)?\s*(?:ohm(?:s|ios?)?|omega|[\u03a9\u03c9])\b/i);
-      expect(copy).not.toMatch(/\b(?:cert(?:ificacion|ificado)?|cert\.?)\s*(?:de\s*)?SEC\b/i);
+      expect(copy).not.toMatch(
+        /\b\d+(?:[.,]\d+)?\s*(?:ohm(?:s|ios?)?|omega|[\u03a9\u03c9])\b/i
+      );
+      expect(copy).not.toMatch(
+        /\b(?:cert(?:ificacion|ificado)?|cert\.?)\s*(?:de\s*)?SEC\b/i
+      );
       expect(copy).toContain('RIC N06 segun corresponda al proyecto');
     }
   });
