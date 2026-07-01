@@ -12,7 +12,12 @@ const readField = (markdown, label) => {
 describe('YouTube upload batch webhook', () => {
   it('returns NO_VIDEOS when payload is empty', () => {
     expect(buildYoutubeUploadBatchMarkdown()).toBe('NO_VIDEOS');
-    expect(buildYoutubeUploadBatchMarkdown({ event: 'youtube_upload_batch', videos: [] })).toBe('NO_VIDEOS');
+    expect(
+      buildYoutubeUploadBatchMarkdown({
+        event: 'youtube_upload_batch',
+        videos: [],
+      })
+    ).toBe('NO_VIDEOS');
   });
 
   it('returns markdown for each uploaded video', async () => {
@@ -62,4 +67,3 @@ describe('YouTube upload batch webhook', () => {
     expect(markdown).toContain('RIC N06 aplica cuando el proyecto lo requiere');
   });
 });
-

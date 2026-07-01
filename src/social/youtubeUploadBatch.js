@@ -12,7 +12,10 @@ const FIELD_PRIORITY = [
   'slug',
 ];
 
-const normalizeWhitespace = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
+const normalizeWhitespace = (value) =>
+  String(value ?? '')
+    .replace(/\s+/g, ' ')
+    .trim();
 
 const truncateAtWord = (value, maxLength) => {
   const normalized = normalizeWhitespace(value);
@@ -30,10 +33,19 @@ const truncateAtWord = (value, maxLength) => {
 
 const sanitizeRestrictedClaims = (value) => {
   const withoutTechnicalFigures = normalizeWhitespace(value)
-    .replace(/\b\d+(?:[.,]\d+)?\s*(?:ohm(?:io)?s?|omega?s?)\b/gi, 'resultados tecnicos del proyecto')
-    .replace(/\bcert(?:ificacion|ificado|\.?)?\s*SEC\b/gi, 'validacion normativa')
+    .replace(
+      /\b\d+(?:[.,]\d+)?\s*(?:ohm(?:io)?s?|omega?s?)\b/gi,
+      'resultados tecnicos del proyecto'
+    )
+    .replace(
+      /\bcert(?:ificacion|ificado|\.?)?\s*SEC\b/gi,
+      'validacion normativa'
+    )
     .replace(/\bSEC\b/g, 'normativa aplicable')
-    .replace(/\bRIC\s*N\s*0?6\b/gi, 'RIC N06 sujeto a los requisitos del proyecto')
+    .replace(
+      /\bRIC\s*N\s*0?6\b/gi,
+      'RIC N06 sujeto a los requisitos del proyecto'
+    )
     .replace(/\bRICN0?6\b/gi, 'RIC N06 sujeto a los requisitos del proyecto');
 
   return truncateAtWord(withoutTechnicalFigures, 180) || DEFAULT_TOPIC;
@@ -102,4 +114,3 @@ export const buildYoutubeUploadBatchMarkdown = (payload = {}) => {
 
   return videos.map(formatVideoMarkdown).join('\n\n');
 };
-
