@@ -13,7 +13,15 @@ const envSchema = z.object({
   MP_ACCESS_TOKEN: z.string().optional(),
 });
 
+const rawEnv = {
+  ...process.env,
+};
+
+if ((rawEnv.NODE_ENV || 'development') === 'test' && !rawEnv.DATABASE_URL) {
+  rawEnv.DATABASE_URL = 'mysql://root:password@localhost:3306/magnoterra_test';
+}
+
 // Validate environment variables
-const env = envSchema.parse(process.env);
+const env = envSchema.parse(rawEnv);
 
 export default env;

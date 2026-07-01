@@ -76,6 +76,21 @@ curl http://localhost:3000/health
 - `GET /api` - Información de la API
 - `GET /api/health` - Health check de la API
 - `GET /api/db-check` - Verificación de BD de la API
+- `POST /api/webhooks/youtube-upload-batch` - Markdown para copys LinkedIn/Instagram de videos subidos
+
+Payload esperado:
+```json
+{
+  "event": "youtube_upload_batch",
+  "videos": [
+    {
+      "video_id": "abc123",
+      "url": "https://youtu.be/abc123",
+      "job": "Mantenimiento de puesta a tierra industrial"
+    }
+  ]
+}
+```
 
 ## 🐳 Docker
 
@@ -184,11 +199,14 @@ magnoterra-api/
 │   │   └── logger.js      # Sistema de logging
 │   ├── payments/
 │   │   └── mercadopago.js # Integración MP (placeholder)
+│   ├── social/
+│   │   └── youtubeUploadBatch.js # Generador markdown para videos
 │   └── routes/
 │       └── index.js       # Rutas de la API
 ├── tests/
 │   ├── health.test.js     # Tests del health check
-│   └── db-check.test.js   # Tests de verificación de BD
+│   ├── db-check.test.js   # Tests de verificación de BD
+│   └── youtube-upload-batch.test.js # Tests del webhook social
 ├── public/                 # Archivos estáticos
 └── .github/
     └── workflows/
