@@ -1,8 +1,23 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import {
+  formatYoutubeUploadBatchMarkdown,
+  isYoutubeUploadBatchEvent,
+} from '../social/youtubeUploadBatch.js';
 
 const router = express.Router();
+
+const respondYoutubeUploadBatch = (req, res) => {
+  if (!isYoutubeUploadBatchEvent(req.body)) {
+    return res.status(400).type('text/markdown').send('UNSUPPORTED_EVENT');
+  }
+
+  return res
+    .status(200)
+    .type('text/markdown')
+    .send(formatYoutubeUploadBatchMarkdown(req.body));
+};
 
 // Health check endpoint
 router.get('/health', (req, res) => {
@@ -26,6 +41,10 @@ router.get('/db-check', asyncHandler(async (req, res) => {
     });
   }
 }));
+
+// Webhook for social media copy generated from YouTube upload batches.
+router.post('/webhooks', respondYoutubeUploadBatch);
+router.post('/webhooks/youtube-upload-batch', respondYoutubeUploadBatch);
 
 // API info
 router.get('/', (req, res) => {
