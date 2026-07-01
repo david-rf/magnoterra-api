@@ -4,11 +4,21 @@ import { z } from 'zod';
 // Load environment variables
 dotenv.config();
 
+const databaseUrlSchema =
+  process.env.NODE_ENV === 'test'
+    ? z
+        .string()
+        .url('DATABASE_URL must be a valid URL')
+        .default('mysql://test:test@localhost:3306/test')
+    : z.string().url('DATABASE_URL must be a valid URL');
+
 // Environment schema validation
 const envSchema = z.object({
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  NODE_ENV: z
+    .enum(['development', 'production', 'test'])
+    .default('development'),
   PORT: z.string().transform(Number).default('3000'),
-  DATABASE_URL: z.string().url('DATABASE_URL must be a valid URL'),
+  DATABASE_URL: databaseUrlSchema,
   MP_PUBLIC_KEY: z.string().optional(),
   MP_ACCESS_TOKEN: z.string().optional(),
 });
