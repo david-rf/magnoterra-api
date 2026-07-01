@@ -2,9 +2,17 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import {
+  buildYoutubeUploadBatchMarkdown,
+  isYoutubeUploadBatchEvent,
+} from './src/social/youtubeUploadBatch.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+const sendYoutubeUploadBatchMarkdown = (req, res) => {
+  res.type('text/markdown').send(buildYoutubeUploadBatchMarkdown(req.body));
+};
 
 // Debug info al inicio
 console.log('=== RAILWAY STARTUP DEBUG ===');
@@ -64,6 +72,18 @@ app.get('/api', (req, res) => {
     }
   });
 });
+
+// Webhook endpoint for YouTube upload batch automation
+app.post('/api/webhooks', (req, res) => {
+  if (!isYoutubeUploadBatchEvent(req.body)) {
+    return res.status(400).type('text/markdown').send('UNSUPPORTED_EVENT');
+  }
+
+  return sendYoutubeUploadBatchMarkdown(req, res);
+});
+
+app.post('/api/webhooks/youtube-upload-batch', sendYoutubeUploadBatchMarkdown);
+app.post('/api/webhooks/youtube_upload_batch', sendYoutubeUploadBatchMarkdown);
 
 // Error handling básico
 app.use((err, req, res, next) => {
