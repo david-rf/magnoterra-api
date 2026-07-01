@@ -19,7 +19,7 @@ const truncate = (text, maxLength) => {
     return text;
   }
 
-  return text.slice(0, maxLength - 3).trimEnd() + '...';
+  return `${text.slice(0, maxLength - 3).trimEnd()}...`;
 };
 
 const getJobLabel = (job) => {
