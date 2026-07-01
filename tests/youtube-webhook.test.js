@@ -7,15 +7,16 @@ import {
 } from '../src/social/youtubeBatchMarkdown.js';
 
 const extractSection = (markdown, startLabel, endLabel) => {
-  const [, section = ''] = markdown.match(new RegExp(`${startLabel}\\n([\\s\\S]*?)\\n\\n${endLabel}`)) ?? [];
+  const [, section = ''] =
+    markdown.match(
+      new RegExp(`${startLabel}\\n([\\s\\S]*?)\\n\\n${endLabel}`)
+    ) ?? [];
   return section;
 };
 
 describe('YouTube upload batch webhook', () => {
   it('returns NO_VIDEOS for an empty payload', async () => {
-    const response = await request(app)
-      .post('/api/webhooks')
-      .send({});
+    const response = await request(app).post('/api/webhooks').send({});
 
     expect(response.status).toBe(200);
     expect(response.type).toContain('text/markdown');
@@ -39,7 +40,7 @@ describe('YouTube upload batch webhook', () => {
     const linkedInCopy = extractSection(
       response.text,
       '2\\) Copy LinkedIn empresa',
-      '3\\) Caption Instagram',
+      '3\\) Caption Instagram'
     );
     const instagramCaption = response.text.split('3) Caption Instagram\n')[1];
 
@@ -70,7 +71,9 @@ describe('YouTube upload batch webhook', () => {
       ],
     });
 
-    expect(markdown).toContain('https://www.youtube.com/watch?v=video%20with%20spaces');
+    expect(markdown).toContain(
+      'https://www.youtube.com/watch?v=video%20with%20spaces'
+    );
     expect(markdown).toContain('Proyecto industrial - Santiago');
   });
 

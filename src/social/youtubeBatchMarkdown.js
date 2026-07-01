@@ -7,14 +7,18 @@ const DEFAULT_JOB_CONTEXT = 'un nuevo registro tecnico de terreno';
 
 const normalizeWhitespace = (value) => value.replace(/\s+/g, ' ').trim();
 
-const stripRestrictedClaims = (value) => normalizeWhitespace(value)
-  .replace(/\b\d+(?:[.,]\d+)?\s*(?:[\u03a9\u03c9]|ohmios?|ohms?|omega)\b/gi, '')
-  .replace(/\b(?:[\u03a9\u03c9]|ohmios?|ohms?|omega)\b/gi, '')
-  .replace(/\bcert(?:ificaci(?:o|\u00f3)n|ificado)?\s+SEC\b/gi, '')
-  .replace(/\bSEC\b/gi, '')
-  .replace(/\s+([,.;:])/g, '$1')
-  .replace(/\s+/g, ' ')
-  .trim();
+const stripRestrictedClaims = (value) =>
+  normalizeWhitespace(value)
+    .replace(
+      /\b\d+(?:[.,]\d+)?\s*(?:[\u03a9\u03c9]|ohmios?|ohms?|omega)\b/gi,
+      ''
+    )
+    .replace(/\b(?:[\u03a9\u03c9]|ohmios?|ohms?|omega)\b/gi, '')
+    .replace(/\bcert(?:ificaci(?:o|\u00f3)n|ificado)?\s+SEC\b/gi, '')
+    .replace(/\bSEC\b/gi, '')
+    .replace(/\s+([,.;:])/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim();
 
 const getCleanString = (value) => {
   if (typeof value !== 'string') {
@@ -33,7 +37,14 @@ const getJobText = (job) => {
     return '';
   }
 
-  const fields = ['title', 'name', 'project', 'location', 'city', 'description'];
+  const fields = [
+    'title',
+    'name',
+    'project',
+    'location',
+    'city',
+    'description',
+  ];
   return fields
     .map((field) => getCleanString(job[field]))
     .filter(Boolean)
