@@ -2,9 +2,17 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import {
+  buildYoutubeUploadBatchMarkdown,
+  isYoutubeUploadBatchEvent,
+} from './src/social/youtubeUploadBatch.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+const sendYoutubeUploadBatchMarkdown = (req, res) => {
+  res.type('text/markdown').send(buildYoutubeUploadBatchMarkdown(req.body));
+};
 
 // Debug info al inicio
 console.log('=== RAILWAY STARTUP DEBUG ===');
@@ -17,7 +25,10 @@ console.log('- NODE_ENV:', process.env.NODE_ENV);
 console.log('- PORT:', process.env.PORT);
 console.log('- DATABASE_URL:', process.env.DATABASE_URL ? 'SET' : 'NOT SET');
 console.log('- MP_PUBLIC_KEY:', process.env.MP_PUBLIC_KEY ? 'SET' : 'NOT SET');
-console.log('- MP_ACCESS_TOKEN:', process.env.MP_ACCESS_TOKEN ? 'SET' : 'NOT SET');
+console.log(
+  '- MP_ACCESS_TOKEN:',
+  process.env.MP_ACCESS_TOKEN ? 'SET' : 'NOT SET'
+);
 
 // Middleware básico
 app.use(helmet());
@@ -34,7 +45,7 @@ app.get('/health', (req, res) => {
     environment: process.env.NODE_ENV || 'production',
     version: '1.0.0',
     message: 'Magno Terra API is running',
-    port: port
+    port,
   });
 });
 
@@ -46,7 +57,7 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     status: 'running',
     health: '/health',
-    environment: process.env.NODE_ENV || 'production'
+    environment: process.env.NODE_ENV || 'production',
   });
 });
 
@@ -60,27 +71,42 @@ app.get('/api', (req, res) => {
     endpoints: {
       health: '/health',
       root: '/',
-      api: '/api'
-    }
+      api: '/api',
+    },
   });
 });
 
+// Webhook endpoint for YouTube upload batch automation
+app.post('/api/webhooks', (req, res) => {
+  if (!isYoutubeUploadBatchEvent(req.body)) {
+    return res.status(400).type('text/markdown').send('UNSUPPORTED_EVENT');
+  }
+
+  return sendYoutubeUploadBatchMarkdown(req, res);
+});
+
+app.post('/api/webhooks/youtube-upload-batch', sendYoutubeUploadBatchMarkdown);
+app.post('/api/webhooks/youtube_upload_batch', sendYoutubeUploadBatchMarkdown);
+
 // Error handling básico
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error('Error occurred:', err);
-  res.status(500).json({ 
+  res.status(500).json({
     error: 'Internal Server Error',
-    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
+    message:
+      process.env.NODE_ENV === 'development'
+        ? err.message
+        : 'Something went wrong',
   });
 });
 
 // 404 handler
 app.use('*', (req, res) => {
   console.log('404 for path:', req.originalUrl);
-  res.status(404).json({ 
+  res.status(404).json({
     error: 'Not Found',
     path: req.originalUrl,
-    available: ['/', '/health', '/api']
+    available: ['/', '/health', '/api'],
   });
 });
 
