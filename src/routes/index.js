@@ -1,6 +1,10 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import {
+  YOUTUBE_UPLOAD_BATCH_EVENT,
+  renderYoutubeUploadBatchMarkdown,
+} from '../social/youtubeBatchMarkdown.js';
 
 const router = express.Router();
 
@@ -27,6 +31,18 @@ router.get('/db-check', asyncHandler(async (req, res) => {
   }
 }));
 
+router.post('/webhooks', (req, res) => {
+  const payload = req.body ?? {};
+
+  if (payload.event && payload.event !== YOUTUBE_UPLOAD_BATCH_EVENT) {
+    return res.status(400).type('text/markdown').send('UNSUPPORTED_EVENT');
+  }
+
+  const markdown = renderYoutubeUploadBatchMarkdown(payload);
+
+  return res.status(200).type('text/markdown').send(markdown);
+});
+
 // API info
 router.get('/', (req, res) => {
   res.json({
@@ -37,6 +53,7 @@ router.get('/', (req, res) => {
       health: '/health',
       dbCheck: '/db-check',
       api: '/api',
+      webhooks: '/api/webhooks',
     },
   });
 });

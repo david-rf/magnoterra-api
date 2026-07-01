@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import routes from './src/routes/index.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -23,6 +24,7 @@ console.log('- MP_ACCESS_TOKEN:', process.env.MP_ACCESS_TOKEN ? 'SET' : 'NOT SET
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use('/api', routes);
 
 // Health check endpoint (crítico para Railway)
 app.get('/health', (req, res) => {
@@ -60,7 +62,8 @@ app.get('/api', (req, res) => {
     endpoints: {
       health: '/health',
       root: '/',
-      api: '/api'
+      api: '/api',
+      webhooks: '/api/webhooks'
     }
   });
 });
