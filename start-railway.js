@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { buildYoutubeUploadBatchMarkdown } from './src/lib/youtubeUploadBatchMarkdown.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,7 +35,7 @@ app.get('/health', (req, res) => {
     environment: process.env.NODE_ENV || 'production',
     version: '1.0.0',
     message: 'Magno Terra API is running',
-    port: port
+    port
   });
 });
 
@@ -60,13 +61,24 @@ app.get('/api', (req, res) => {
     endpoints: {
       health: '/health',
       root: '/',
-      api: '/api'
+      api: '/api',
+      webhooks: '/api/webhooks',
+      youtubeUploadBatchWebhook: '/api/webhooks/youtube-upload-batch',
     }
   });
 });
 
+const respondYoutubeUploadBatchMarkdown = (req, res) => {
+  const markdown = buildYoutubeUploadBatchMarkdown(req.body);
+
+  res.type('text/markdown').send(markdown);
+};
+
+app.post('/api/webhooks', respondYoutubeUploadBatchMarkdown);
+app.post('/api/webhooks/youtube-upload-batch', respondYoutubeUploadBatchMarkdown);
+
 // Error handling básico
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
   console.error('Error occurred:', err);
   res.status(500).json({ 
     error: 'Internal Server Error',
