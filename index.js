@@ -88,34 +88,36 @@ app.use(notFound);
 // Global error handler
 app.use(errorHandler);
 
-// Graceful shutdown
-process.on('SIGTERM', async () => {
-  logger.info('SIGTERM received, shutting down gracefully');
-  await dbPool.close();
-  process.exit(0);
-});
+if (env.NODE_ENV !== 'test') {
+  // Graceful shutdown
+  process.on('SIGTERM', async () => {
+    logger.info('SIGTERM received, shutting down gracefully');
+    await dbPool.close();
+    process.exit(0);
+  });
 
-process.on('SIGINT', async () => {
-  logger.info('SIGINT received, shutting down gracefully');
-  await dbPool.close();
-  process.exit(0);
-});
+  process.on('SIGINT', async () => {
+    logger.info('SIGINT received, shutting down gracefully');
+    await dbPool.close();
+    process.exit(0);
+  });
 
-// Start server
-app.listen(port, async () => {
-  try {
-    // Test database connection
-    await dbPool.getPool();
-    
-    logger.info(`🚀 Magno Terra API server running on port ${port}`);
-    logger.info(`📊 Environment: ${env.NODE_ENV}`);
-    logger.info(`🔗 Health check: http://localhost:${port}/health`);
-    logger.info(`🔗 Database check: http://localhost:${port}/db-check`);
-    logger.info(`🔗 API base: http://localhost:${port}/api`);
-  } catch (error) {
-    logger.error('Failed to start server:', error.message);
-    process.exit(1);
-  }
-});
+  // Start server
+  app.listen(port, async () => {
+    try {
+      // Test database connection
+      await dbPool.getPool();
+
+      logger.info(`🚀 Magno Terra API server running on port ${port}`);
+      logger.info(`📊 Environment: ${env.NODE_ENV}`);
+      logger.info(`🔗 Health check: http://localhost:${port}/health`);
+      logger.info(`🔗 Database check: http://localhost:${port}/db-check`);
+      logger.info(`🔗 API base: http://localhost:${port}/api`);
+    } catch (error) {
+      logger.error('Failed to start server:', error.message);
+      process.exit(1);
+    }
+  });
+}
 
 export default app; 
