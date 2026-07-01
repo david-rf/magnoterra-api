@@ -1,8 +1,14 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import { buildYoutubeUploadBatchMarkdown } from '../social/youtubeUploadMarkdown.js';
 
 const router = express.Router();
+
+const sendYoutubeUploadBatchMarkdown = (req, res) => {
+  const markdown = buildYoutubeUploadBatchMarkdown(req.body);
+  res.type('text/markdown').status(200).send(markdown);
+};
 
 // Health check endpoint
 router.get('/health', (req, res) => {
@@ -26,6 +32,19 @@ router.get('/db-check', asyncHandler(async (req, res) => {
     });
   }
 }));
+
+router.post('/webhooks/youtube-upload-batch', sendYoutubeUploadBatchMarkdown);
+router.post('/webhooks/youtube_upload_batch', sendYoutubeUploadBatchMarkdown);
+router.post('/webhooks/youtube', sendYoutubeUploadBatchMarkdown);
+router.post('/webhooks', (req, res) => {
+  if (!req.body?.event || req.body.event === 'youtube_upload_batch') {
+    return sendYoutubeUploadBatchMarkdown(req, res);
+  }
+
+  return res.status(400).json({
+    error: 'Unsupported webhook event',
+  });
+});
 
 // API info
 router.get('/', (req, res) => {
