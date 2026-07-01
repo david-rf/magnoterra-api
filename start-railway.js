@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { formatYoutubeUploadBatchMarkdown } from './src/lib/youtubeSocialCopy.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,7 +35,7 @@ app.get('/health', (req, res) => {
     environment: process.env.NODE_ENV || 'production',
     version: '1.0.0',
     message: 'Magno Terra API is running',
-    port: port
+    port
   });
 });
 
@@ -60,13 +61,20 @@ app.get('/api', (req, res) => {
     endpoints: {
       health: '/health',
       root: '/',
-      api: '/api'
+      api: '/api',
+      youtubeUploadBatchWebhook: '/api/webhooks/youtube-upload-batch'
     }
   });
 });
 
+app.post('/api/webhooks/youtube-upload-batch', (req, res) => {
+  console.log('YouTube upload batch webhook requested');
+  const markdown = formatYoutubeUploadBatchMarkdown(req.body);
+  res.status(200).type('text/markdown').send(markdown);
+});
+
 // Error handling básico
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error('Error occurred:', err);
   res.status(500).json({ 
     error: 'Internal Server Error',
@@ -80,7 +88,7 @@ app.use('*', (req, res) => {
   res.status(404).json({ 
     error: 'Not Found',
     path: req.originalUrl,
-    available: ['/', '/health', '/api']
+    available: ['/', '/health', '/api', '/api/webhooks/youtube-upload-batch']
   });
 });
 
