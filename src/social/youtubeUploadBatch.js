@@ -19,8 +19,18 @@ const textFromJob = (job) => {
     return fallbackTopic;
   }
 
-  const preferredFields = ['title', 'titulo', 'topic', 'tema', 'name', 'nombre', 'description'];
-  const field = preferredFields.find((key) => typeof job[key] === 'string' && job[key].trim());
+  const preferredFields = [
+    'title',
+    'titulo',
+    'topic',
+    'tema',
+    'name',
+    'nombre',
+    'description',
+  ];
+  const field = preferredFields.find(
+    (key) => typeof job[key] === 'string' && job[key].trim()
+  );
 
   return field ? job[field] : fallbackTopic;
 };
@@ -35,9 +45,12 @@ const sanitizeTopic = (value) => {
   const withoutRestrictedClaims = normalized
     .replace(
       /\b\d+(?:[.,]\d+)?\s*(?:(?:ohmios?|ohms?|omega|omegas)\b|[\u03a9\u03c9\u2126])/gi,
-      'valores definidos por el proyecto',
+      'valores definidos por el proyecto'
     )
-    .replace(/\bcert(?:ificacion|ificado|\.?)\s+SEC\b/gi, 'documentacion tecnica aplicable')
+    .replace(
+      /\bcert(?:ificacion|ificado|\.?)\s+SEC\b/gi,
+      'documentacion tecnica aplicable'
+    )
     .replace(/\bRIC\s*N0?6\b/gi, 'RIC N06 segun alcance del proyecto');
 
   return withoutRestrictedClaims.slice(0, 140).trim() || fallbackTopic;
@@ -71,7 +84,7 @@ const linkedInCopy = (topic) =>
       `Necesitas revisar tu caso? Escribenos en ${CONTACT_CTA}`,
       HASHTAGS,
     ].join('\n\n'),
-    LINKEDIN_MAX_CHARS,
+    LINKEDIN_MAX_CHARS
   );
 
 const instagramCaption = (topic) =>
@@ -82,7 +95,7 @@ const instagramCaption = (topic) =>
       `Contacto: ${CONTACT_CTA}`,
       HASHTAGS,
     ].join('\n\n'),
-    INSTAGRAM_MAX_CHARS,
+    INSTAGRAM_MAX_CHARS
   );
 
 const markdownForVideo = (video, index) => {
@@ -114,4 +127,5 @@ export const buildYoutubeUploadBatchMarkdown = (payload = {}) => {
   return videos.map(markdownForVideo).join('\n\n---\n\n');
 };
 
-export const isYoutubeUploadBatchEvent = (payload = {}) => payload?.event === EVENT_NAME;
+export const isYoutubeUploadBatchEvent = (payload = {}) =>
+  payload?.event === EVENT_NAME;
