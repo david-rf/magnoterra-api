@@ -1,6 +1,6 @@
 import logger from '../lib/logger.js';
 
-export const errorHandler = (err, req, res, next) => {
+export const errorHandler = (err, req, res, _next) => {
   logger.error('Error occurred:', {
     error: err.message,
     stack: err.stack,
@@ -11,7 +11,7 @@ export const errorHandler = (err, req, res, next) => {
 
   // Don't leak error details in production
   const isDevelopment = process.env.NODE_ENV === 'development';
-  
+
   if (err.name === 'ValidationError') {
     return res.status(400).json({
       error: 'Validation Error',
