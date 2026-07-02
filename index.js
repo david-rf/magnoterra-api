@@ -102,7 +102,7 @@ process.on('SIGINT', async () => {
 });
 
 // Start server
-app.listen(port, async () => {
+export const startServer = () => app.listen(port, async () => {
   try {
     // Test database connection
     await dbPool.getPool();
@@ -117,5 +117,9 @@ app.listen(port, async () => {
     process.exit(1);
   }
 });
+
+if (env.NODE_ENV !== 'test') {
+  startServer();
+}
 
 export default app; 

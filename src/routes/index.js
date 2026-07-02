@@ -1,6 +1,10 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import {
+  formatYoutubeUploadBatchMarkdown,
+  YOUTUBE_UPLOAD_BATCH_EVENT,
+} from '../social/youtubeUploadBatch.js';
 
 const router = express.Router();
 
@@ -27,6 +31,22 @@ router.get('/db-check', asyncHandler(async (req, res) => {
   }
 }));
 
+// Social copy webhook for uploaded YouTube video batches
+router.post('/webhooks/youtube-upload-batch', (req, res) => {
+  const payload = req.body ?? {};
+
+  if (payload.event && payload.event !== YOUTUBE_UPLOAD_BATCH_EVENT) {
+    return res.status(400).json({
+      error: 'Invalid event',
+      expected: YOUTUBE_UPLOAD_BATCH_EVENT,
+    });
+  }
+
+  res
+    .type('text/markdown')
+    .send(formatYoutubeUploadBatchMarkdown(payload));
+});
+
 // API info
 router.get('/', (req, res) => {
   res.json({
@@ -37,6 +57,7 @@ router.get('/', (req, res) => {
       health: '/health',
       dbCheck: '/db-check',
       api: '/api',
+      youtubeUploadBatchWebhook: '/api/webhooks/youtube-upload-batch',
     },
   });
 });
