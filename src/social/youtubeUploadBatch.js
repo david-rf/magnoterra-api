@@ -28,7 +28,7 @@ const truncateSentence = (value, maxLength) => {
     return text;
   }
 
-  return `${text.slice(0, Math.max(0, maxLength - 1)).trimEnd()}…`;
+  return `${text.slice(0, Math.max(0, maxLength - 3)).trimEnd()}...`;
 };
 
 const getJobText = (job) => {
@@ -89,7 +89,7 @@ const buildLinkedInCopy = (job) => {
   const copy = [
     `Nuevo video Magno Terra: ${context}.`,
     'Acompañamos a empresas y proyectos en Chile con soluciones de puesta a tierra planificadas desde terreno, documentación técnica y coordinación con las condiciones reales de cada obra.',
-    'La revisión normativa, incluyendo RIC N°06 cuando corresponda, siempre debe evaluarse según el proyecto.',
+    'La revision normativa, incluyendo RIC N06 cuando corresponda, siempre debe evaluarse segun el proyecto.',
     `Conversemos sobre tu requerimiento: ${CONTACT_CTA}`,
     '',
     LINKEDIN_HASHTAGS,

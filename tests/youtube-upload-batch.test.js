@@ -77,7 +77,7 @@ describe('YouTube upload batch webhook', () => {
     expect(instagramCaption.length).toBeLessThanOrEqual(500);
     expect(linkedInCopy).toContain('magnoterra.cl/contacto');
     expect(linkedInCopy).toContain('#PuestaATierra #Chile #MagnoTerra');
-    expect(linkedInCopy).toContain('RIC N°06 cuando corresponda');
+    expect(linkedInCopy).toContain('RIC N06 cuando corresponda');
     expect(`${linkedInCopy} ${instagramCaption}`).not.toMatch(/SEC|ohm|omega|Ω/i);
   });
 
