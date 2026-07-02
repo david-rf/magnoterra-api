@@ -28,7 +28,7 @@ describe('youtube upload batch markdown', () => {
         {
           video_id: 'yt-001',
           url: 'https://youtu.be/example-1',
-          job: 'Proyecto industrial 2 Ω con cert SEC',
+          job: 'Proyecto industrial 2 Ω con cert SEC y 3 omega',
         },
         {
           video_id: 'yt-002',
@@ -38,17 +38,17 @@ describe('youtube upload batch markdown', () => {
       ],
     });
 
-    expect(markdown).toContain('### Video 1');
-    expect(markdown).toContain('### Video 2');
+    expect(markdown).not.toContain('### Video');
     expect(markdown).toContain('1) URL\nhttps://youtu.be/example-1');
     expect(markdown).toContain('1) URL\nhttps://youtu.be/example-2');
+    expect(markdown.match(/1\) URL/g)).toHaveLength(2);
     expect(markdown).toContain('2) Copy LinkedIn empresa');
     expect(markdown).toContain('3) Caption Instagram');
     expect(markdown).toContain(CONTACT_CTA);
     expect(markdown).toContain(REQUIRED_HASHTAGS);
     expect(markdown).toContain('RIC N06');
-    expect(markdown).not.toMatch(/Ω|ohm/i);
-    expect(markdown).not.toMatch(/\bSEC\b/);
+    expect(markdown).not.toMatch(/Ω|omega|ohm/i);
+    expect(markdown).not.toMatch(/\bSEC\b/i);
   });
 
   it('keeps social copy within requested character limits', () => {

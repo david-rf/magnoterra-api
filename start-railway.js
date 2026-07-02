@@ -2,6 +2,10 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import {
+  buildYoutubeUploadBatchMarkdown,
+  isYoutubeUploadBatchEvent,
+} from './src/lib/socialVideoMarkdown.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -63,6 +67,20 @@ app.get('/api', (req, res) => {
       api: '/api'
     }
   });
+});
+
+app.post('/api/webhooks', (req, res) => {
+  const payload = req.body;
+
+  if (!payload || Object.keys(payload).length === 0) {
+    return res.type('text/markdown').send('NO_VIDEOS');
+  }
+
+  if (!isYoutubeUploadBatchEvent(payload)) {
+    return res.status(400).type('text/markdown').send('UNSUPPORTED_EVENT');
+  }
+
+  res.type('text/markdown').send(buildYoutubeUploadBatchMarkdown(payload));
 });
 
 // Error handling básico

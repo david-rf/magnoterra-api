@@ -7,9 +7,9 @@ const INSTAGRAM_MAX_LENGTH = 500;
 const JOB_MAX_LENGTH = 80;
 
 const FORBIDDEN_DYNAMIC_PATTERNS = [
-  /\b\d+(?:[.,]\d+)?\s*(?:Ω|ohms?|ohmios?)\b/gi,
+  /\b\d+(?:[.,]\d+)?\s*(?:Ω|omega|ohms?|ohmios?)\b/gi,
   /\b(?:cert(?:ificacion|ificación)?|cert\.?)\s*SEC\b/gi,
-  /\bSEC\b/g,
+  /\bSEC\b/gi,
   /Ω/g,
 ];
 
@@ -90,14 +90,8 @@ const buildInstagramCaption = (video) => {
 
 const isRecord = (value) => value && typeof value === 'object' && !Array.isArray(value);
 
-const formatVideoMarkdown = (video, index, includeHeading) => {
-  const lines = [];
-
-  if (includeHeading) {
-    lines.push(`### Video ${index + 1}`, '');
-  }
-
-  lines.push(
+const formatVideoMarkdown = (video) => (
+  [
     '1) URL',
     String(video.url).trim(),
     '',
@@ -106,10 +100,8 @@ const formatVideoMarkdown = (video, index, includeHeading) => {
     '',
     '3) Caption Instagram',
     buildInstagramCaption(video),
-  );
-
-  return lines.join('\n');
-};
+  ].join('\n')
+);
 
 export const buildYoutubeUploadBatchMarkdown = (payload) => {
   const videos = isRecord(payload) && Array.isArray(payload.videos)
@@ -120,9 +112,8 @@ export const buildYoutubeUploadBatchMarkdown = (payload) => {
     return 'NO_VIDEOS';
   }
 
-  const includeHeading = videos.length > 1;
   return videos
-    .map((video, index) => formatVideoMarkdown(video, index, includeHeading))
+    .map((video) => formatVideoMarkdown(video))
     .join('\n\n');
 };
 
