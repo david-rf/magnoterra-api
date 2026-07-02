@@ -5,10 +5,11 @@ const HASHTAGS = '#PuestaATierra #Chile #MagnoTerra';
 const NO_VIDEOS = 'NO_VIDEOS';
 
 const OMEGA_VALUE_PATTERN =
-  /\b\d+(?:[.,]\d+)?\s*(?:ohms?|ohmios?|omega|omegas|[\u03a9\u2126])\b/gi;
+  /\b\d+(?:[.,]\d+)?\s*(?:(?:ohms?|ohmios?|omega|omegas)\b|[\u03a9\u2126])(?=\s|$|[.,;:])/gi;
 const SEC_CERT_PATTERN =
   /\b(?:cert(?:\.|ificado|ificacion)?\s*(?:sec)|sec\s*cert(?:\.|ificado|ificacion)?)\b/gi;
-const RIC_N06_PATTERN = /\bric\s*n(?:[\u00b0\u00ba]|ro\.?|umero)?\s*0?6\b/gi;
+const RIC_N06_PATTERN =
+  /\b(?:obligatori[oa]\s+|requerid[oa]\s+|exigid[oa]\s+)?ric\s*n(?:[\u00b0\u00ba]|ro\.?|umero)?\s*0?6(?:\s+(?:obligatori[oa]|requerid[oa]|exigid[oa]))?\b/gi;
 
 const singleLine = (value) =>
   String(value ?? '')
