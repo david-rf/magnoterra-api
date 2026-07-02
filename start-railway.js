@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import routes from './src/routes/index.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,7 +35,7 @@ app.get('/health', (req, res) => {
     environment: process.env.NODE_ENV || 'production',
     version: '1.0.0',
     message: 'Magno Terra API is running',
-    port: port
+    port
   });
 });
 
@@ -60,13 +61,16 @@ app.get('/api', (req, res) => {
     endpoints: {
       health: '/health',
       root: '/',
-      api: '/api'
+      api: '/api',
+      youtubeUploadBatch: '/api/webhooks/youtube-upload-batch'
     }
   });
 });
 
+app.use('/api', routes);
+
 // Error handling básico
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error('Error occurred:', err);
   res.status(500).json({ 
     error: 'Internal Server Error',
