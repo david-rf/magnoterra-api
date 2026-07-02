@@ -54,9 +54,7 @@ const getJobText = (job) => {
     'summary',
   ];
 
-  const parts = fields
-    .map((field) => plainText(job[field]))
-    .filter(Boolean);
+  const parts = fields.map((field) => plainText(job[field])).filter(Boolean);
 
   return parts.join(' - ');
 };
@@ -117,7 +115,9 @@ const formatVideo = (video) => {
 
 export const buildYoutubeUploadBatchMarkdown = (payload = {}) => {
   const videos = Array.isArray(payload?.videos) ? payload.videos : [];
-  const validVideos = videos.filter((video) => video && typeof video === 'object');
+  const validVideos = videos.filter(
+    (video) => video && typeof video === 'object'
+  );
 
   if (validVideos.length === 0) {
     return 'NO_VIDEOS';
@@ -125,4 +125,3 @@ export const buildYoutubeUploadBatchMarkdown = (payload = {}) => {
 
   return validVideos.map(formatVideo).join('\n\n---\n\n');
 };
-

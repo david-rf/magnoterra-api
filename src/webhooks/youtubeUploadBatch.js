@@ -12,4 +12,3 @@ export const youtubeUploadBatchWebhook = (req, res) => {
   const markdown = buildYoutubeUploadBatchMarkdown(req.body);
   return res.status(200).type(MARKDOWN_TYPE).send(markdown);
 };
-

@@ -14,9 +14,9 @@ const createApp = () => {
 
 describe('YouTube upload batch markdown', () => {
   it('returns NO_VIDEOS when the payload has no videos', () => {
-    expect(buildYoutubeUploadBatchMarkdown({ event: 'youtube_upload_batch' })).toBe(
-      'NO_VIDEOS'
-    );
+    expect(
+      buildYoutubeUploadBatchMarkdown({ event: 'youtube_upload_batch' })
+    ).toBe('NO_VIDEOS');
   });
 
   it('formats one markdown block per video with required copy', () => {
@@ -77,9 +77,15 @@ describe('YouTube upload batch markdown', () => {
       ],
     });
 
-    expect(markdown).not.toMatch(/\d+(?:[.,]\d+)?\s*(?:ohm|ohmios|[\u03a9\u2126])/i);
-    expect(markdown).not.toMatch(/cert(?:ificado|ificacion|ificaci\u00f3n)?\.?\s*SEC/i);
-    expect(markdown).toMatch(/RIC N06 .*proyecto|RIC N06 .*alcance del proyecto/);
+    expect(markdown).not.toMatch(
+      /\d+(?:[.,]\d+)?\s*(?:ohm|ohmios|[\u03a9\u2126])/i
+    );
+    expect(markdown).not.toMatch(
+      /cert(?:ificado|ificacion|ificaci\u00f3n)?\.?\s*SEC/i
+    );
+    expect(markdown).toMatch(
+      /RIC N06 .*proyecto|RIC N06 .*alcance del proyecto/
+    );
   });
 
   it('responds with markdown from the webhook endpoint', async () => {
@@ -97,4 +103,3 @@ describe('YouTube upload batch markdown', () => {
     );
   });
 });
-
