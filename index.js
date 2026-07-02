@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
+import { pathToFileURL } from 'url';
 
 import env from './src/config/env.js';
 import logger from './src/lib/logger.js';
@@ -88,34 +89,42 @@ app.use(notFound);
 // Global error handler
 app.use(errorHandler);
 
-// Graceful shutdown
-process.on('SIGTERM', async () => {
-  logger.info('SIGTERM received, shutting down gracefully');
-  await dbPool.close();
-  process.exit(0);
-});
+const startServer = () => {
+  app.listen(port, async () => {
+    try {
+      // Test database connection
+      await dbPool.getPool();
+      
+      logger.info(`🚀 Magno Terra API server running on port ${port}`);
+      logger.info(`📊 Environment: ${env.NODE_ENV}`);
+      logger.info(`🔗 Health check: http://localhost:${port}/health`);
+      logger.info(`🔗 Database check: http://localhost:${port}/db-check`);
+      logger.info(`🔗 API base: http://localhost:${port}/api`);
+    } catch (error) {
+      logger.error('Failed to start server:', error.message);
+      process.exit(1);
+    }
+  });
 
-process.on('SIGINT', async () => {
-  logger.info('SIGINT received, shutting down gracefully');
-  await dbPool.close();
-  process.exit(0);
-});
+  // Graceful shutdown
+  process.on('SIGTERM', async () => {
+    logger.info('SIGTERM received, shutting down gracefully');
+    await dbPool.close();
+    process.exit(0);
+  });
 
-// Start server
-app.listen(port, async () => {
-  try {
-    // Test database connection
-    await dbPool.getPool();
-    
-    logger.info(`🚀 Magno Terra API server running on port ${port}`);
-    logger.info(`📊 Environment: ${env.NODE_ENV}`);
-    logger.info(`🔗 Health check: http://localhost:${port}/health`);
-    logger.info(`🔗 Database check: http://localhost:${port}/db-check`);
-    logger.info(`🔗 API base: http://localhost:${port}/api`);
-  } catch (error) {
-    logger.error('Failed to start server:', error.message);
-    process.exit(1);
-  }
-});
+  process.on('SIGINT', async () => {
+    logger.info('SIGINT received, shutting down gracefully');
+    await dbPool.close();
+    process.exit(0);
+  });
+};
 
-export default app; 
+const isMainModule =
+  process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (isMainModule) {
+  startServer();
+}
+
+export default app;
