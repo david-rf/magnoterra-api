@@ -70,7 +70,7 @@ app.get('/api', (req, res) => {
 app.use('/api', routes);
 
 // Error handling básico
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error('Error occurred:', err);
   res.status(500).json({ 
     error: 'Internal Server Error',
