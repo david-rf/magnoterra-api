@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { youtubeUploadBatchWebhookHandler } from './src/social/youtubeUploadBatch.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -60,13 +61,19 @@ app.get('/api', (req, res) => {
     endpoints: {
       health: '/health',
       root: '/',
+      youtubeUploadBatchWebhook: '/api/webhooks/youtube-upload-batch',
       api: '/api'
     }
   });
 });
 
+app.post(
+  ['/api/webhooks/youtube-upload-batch', '/api/webhooks/youtube_upload_batch'],
+  youtubeUploadBatchWebhookHandler,
+);
+
 // Error handling básico
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error('Error occurred:', err);
   res.status(500).json({ 
     error: 'Internal Server Error',
