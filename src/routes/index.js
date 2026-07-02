@@ -1,8 +1,17 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import {
+  buildYoutubeUploadBatchMarkdown,
+  isEmptyYoutubePayload,
+  isYoutubeUploadBatchEvent,
+} from '../social/youtubeUploadBatch.js';
 
 const router = express.Router();
+
+const sendYoutubeUploadBatchMarkdown = (req, res) => {
+  res.type('text/markdown').send(buildYoutubeUploadBatchMarkdown(req.body));
+};
 
 // Health check endpoint
 router.get('/health', (req, res) => {
@@ -15,17 +24,32 @@ router.get('/health', (req, res) => {
 });
 
 // Database connection check
-router.get('/db-check', asyncHandler(async (req, res) => {
-  try {
-    const result = await dbPool.query('SELECT 1 as ok');
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({
-      error: 'Database connection failed',
-      message: error.message,
-    });
+router.get(
+  '/db-check',
+  asyncHandler(async (req, res) => {
+    try {
+      const result = await dbPool.query('SELECT 1 as ok');
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({
+        error: 'Database connection failed',
+        message: error.message,
+      });
+    }
+  })
+);
+
+// Webhook ingress for automation events that must return markdown only.
+router.post('/webhooks', (req, res) => {
+  if (!isEmptyYoutubePayload(req.body) && !isYoutubeUploadBatchEvent(req.body)) {
+    return res.status(400).type('text/markdown').send('UNSUPPORTED_EVENT');
   }
-}));
+
+  return sendYoutubeUploadBatchMarkdown(req, res);
+});
+
+router.post('/webhooks/youtube-upload-batch', sendYoutubeUploadBatchMarkdown);
+router.post('/webhooks/youtube_upload_batch', sendYoutubeUploadBatchMarkdown);
 
 // API info
 router.get('/', (req, res) => {
@@ -37,6 +61,7 @@ router.get('/', (req, res) => {
       health: '/health',
       dbCheck: '/db-check',
       api: '/api',
+      webhooks: '/api/webhooks',
     },
   });
 });
