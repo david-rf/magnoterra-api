@@ -7,13 +7,17 @@ const INSTAGRAM_MAX_LENGTH = 500;
 const JOB_MAX_LENGTH = 80;
 
 const FORBIDDEN_DYNAMIC_PATTERNS = [
-  /\b\d+(?:[.,]\d+)?\s*(?:Ω|omega|ohms?|ohmios?)\b/gi,
+  /\b\d+(?:[.,]\d+)?\s*(?:Ω|omega\b|ohms?\b|ohmios?\b)/gi,
   /\b(?:cert(?:ificacion|ificación)?|cert\.?)\s*SEC\b/gi,
   /\bSEC\b/gi,
   /Ω/g,
 ];
 
 const normalizeWhitespace = (value) => value.replace(/\s+/g, ' ').trim();
+
+const removeDanglingConnectors = (value) => (
+  value.replace(/\b(?:con|y|de|para)\s*$/i, '').trim()
+);
 
 const sanitizeDynamicText = (value) => {
   if (typeof value !== 'string') {
@@ -25,7 +29,7 @@ const sanitizeDynamicText = (value) => {
     value,
   );
 
-  return normalizeWhitespace(sanitized);
+  return removeDanglingConnectors(normalizeWhitespace(sanitized));
 };
 
 const truncateSentence = (value, maxLength) => {

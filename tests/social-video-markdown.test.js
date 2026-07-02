@@ -47,6 +47,7 @@ describe('youtube upload batch markdown', () => {
     expect(markdown).toContain(CONTACT_CTA);
     expect(markdown).toContain(REQUIRED_HASHTAGS);
     expect(markdown).toContain('RIC N06');
+    expect(markdown).not.toContain('Proyecto industrial 2');
     expect(markdown).not.toMatch(/Ω|omega|ohm/i);
     expect(markdown).not.toMatch(/\bSEC\b/i);
   });
