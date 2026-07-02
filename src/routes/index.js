@@ -1,8 +1,19 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import {
+  buildYoutubeUploadBatchMarkdown,
+  isYoutubeUploadBatchEvent,
+} from '../social/youtubeUploadBatchMarkdown.js';
 
 const router = express.Router();
+
+const sendYoutubeUploadBatchMarkdown = (req, res) => {
+  res
+    .status(200)
+    .type('text/markdown')
+    .send(buildYoutubeUploadBatchMarkdown(req.body));
+};
 
 // Health check endpoint
 router.get('/health', (req, res) => {
@@ -15,17 +26,38 @@ router.get('/health', (req, res) => {
 });
 
 // Database connection check
-router.get('/db-check', asyncHandler(async (req, res) => {
-  try {
-    const result = await dbPool.query('SELECT 1 as ok');
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({
-      error: 'Database connection failed',
-      message: error.message,
-    });
+router.get(
+  '/db-check',
+  asyncHandler(async (req, res) => {
+    try {
+      const result = await dbPool.query('SELECT 1 as ok');
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({
+        error: 'Database connection failed',
+        message: error.message,
+      });
+    }
+  })
+);
+
+// Generic webhook ingress for automation events.
+router.post('/webhooks', (req, res) => {
+  const isEmptyPayload =
+    !req.body ||
+    (typeof req.body === 'object' &&
+      !Array.isArray(req.body) &&
+      Object.keys(req.body).length === 0);
+
+  if (isEmptyPayload || isYoutubeUploadBatchEvent(req.body)) {
+    return sendYoutubeUploadBatchMarkdown(req, res);
   }
-}));
+
+  return res.status(400).type('text/markdown').send('UNSUPPORTED_EVENT');
+});
+
+router.post('/webhooks/youtube-upload-batch', sendYoutubeUploadBatchMarkdown);
+router.post('/webhooks/youtube_upload_batch', sendYoutubeUploadBatchMarkdown);
 
 // API info
 router.get('/', (req, res) => {
@@ -36,6 +68,8 @@ router.get('/', (req, res) => {
     endpoints: {
       health: '/health',
       dbCheck: '/db-check',
+      webhooks: '/webhooks',
+      youtubeUploadBatchWebhook: '/webhooks/youtube-upload-batch',
       api: '/api',
     },
   });
