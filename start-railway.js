@@ -2,9 +2,18 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import {
+  buildYoutubeUploadBatchMarkdown,
+  isSupportedYoutubeUploadBatch,
+} from './src/social/youtubeUploadBatchMarkdown.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
+const youtubeUploadBatchWebhookPaths = [
+  '/api/webhook',
+  '/api/webhooks',
+  '/api/webhooks/youtube-upload-batch',
+];
 
 // Debug info al inicio
 console.log('=== RAILWAY STARTUP DEBUG ===');
@@ -34,7 +43,7 @@ app.get('/health', (req, res) => {
     environment: process.env.NODE_ENV || 'production',
     version: '1.0.0',
     message: 'Magno Terra API is running',
-    port: port
+    port
   });
 });
 
@@ -60,13 +69,26 @@ app.get('/api', (req, res) => {
     endpoints: {
       health: '/health',
       root: '/',
-      api: '/api'
+      api: '/api',
+      youtubeUploadBatchWebhook: '/api/webhooks'
     }
   });
 });
 
+// YouTube upload batch webhook for social media copy.
+app.post(youtubeUploadBatchWebhookPaths, (req, res) => {
+  if (!isSupportedYoutubeUploadBatch(req.body)) {
+    return res.status(400).json({
+      error: 'Unsupported event',
+      expected: 'youtube_upload_batch'
+    });
+  }
+
+  res.type('text/markdown').send(buildYoutubeUploadBatchMarkdown(req.body));
+});
+
 // Error handling básico
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error('Error occurred:', err);
   res.status(500).json({ 
     error: 'Internal Server Error',

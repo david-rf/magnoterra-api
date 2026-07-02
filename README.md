@@ -76,6 +76,34 @@ curl http://localhost:3000/health
 - `GET /api` - Información de la API
 - `GET /api/health` - Health check de la API
 - `GET /api/db-check` - Verificación de BD de la API
+- `POST /api/webhooks` - Webhook de lote de videos YouTube para copies sociales
+- `POST /api/webhooks/youtube-upload-batch` - Alias descriptivo del webhook YouTube
+
+### Webhook de videos para redes sociales
+
+Recibe JSON con `event: "youtube_upload_batch"` y `videos[]` con `video_id`, `url` y `job`.
+La respuesta es `text/markdown` y contiene, por cada video:
+
+1. URL
+2. Copy LinkedIn empresa con CTA a `magnoterra.cl/contacto`
+3. Caption Instagram
+
+Si el payload no trae videos, responde `NO_VIDEOS`.
+
+```bash
+curl -X POST http://localhost:3000/api/webhooks \
+  -H "Content-Type: application/json" \
+  -d '{
+    "event": "youtube_upload_batch",
+    "videos": [
+      {
+        "video_id": "abc123",
+        "url": "https://youtu.be/abc123",
+        "job": "Mantencion sistema puesta a tierra"
+      }
+    ]
+  }'
+```
 
 ## 🐳 Docker
 
