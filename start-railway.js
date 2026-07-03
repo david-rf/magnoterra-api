@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import webhooksRouter from './src/routes/webhooks.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,6 +25,9 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+// Webhook routes
+app.use('/api/webhooks', webhooksRouter);
+
 // Health check endpoint (crítico para Railway)
 app.get('/health', (req, res) => {
   console.log('Health check requested');
@@ -34,7 +38,7 @@ app.get('/health', (req, res) => {
     environment: process.env.NODE_ENV || 'production',
     version: '1.0.0',
     message: 'Magno Terra API is running',
-    port: port
+    port
   });
 });
 
@@ -66,7 +70,7 @@ app.get('/api', (req, res) => {
 });
 
 // Error handling básico
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error('Error occurred:', err);
   res.status(500).json({ 
     error: 'Internal Server Error',
