@@ -7,10 +7,15 @@ import {
 
 describe('YouTube upload batch social copy', () => {
   it('returns NO_VIDEOS when the payload has no videos', () => {
-    expect(formatYoutubeUploadBatchMarkdown({ event: 'youtube_upload_batch' })).toBe('NO_VIDEOS');
-    expect(formatYoutubeUploadBatchMarkdown({ event: 'youtube_upload_batch', videos: [] })).toBe(
-      'NO_VIDEOS',
-    );
+    expect(
+      formatYoutubeUploadBatchMarkdown({ event: 'youtube_upload_batch' })
+    ).toBe('NO_VIDEOS');
+    expect(
+      formatYoutubeUploadBatchMarkdown({
+        event: 'youtube_upload_batch',
+        videos: [],
+      })
+    ).toBe('NO_VIDEOS');
   });
 
   it('generates markdown-only blocks for every video', () => {
@@ -33,7 +38,9 @@ describe('YouTube upload batch social copy', () => {
     });
 
     expect(markdown).toContain('1. URL: https://youtu.be/abc-123_X');
-    expect(markdown).toContain('1. URL: https://www.youtube.com/watch?v=def-456_Y');
+    expect(markdown).toContain(
+      '1. URL: https://www.youtube.com/watch?v=def-456_Y'
+    );
     expect(markdown.match(/2\. Copy LinkedIn empresa:/g)).toHaveLength(2);
     expect(markdown.match(/3\. Caption Instagram:/g)).toHaveLength(2);
   });
@@ -52,7 +59,7 @@ describe('YouTube upload batch social copy', () => {
     expect(copy.linkedin).toContain('magnoterra.cl/contacto');
     expect(copy.linkedin).toContain('#PuestaATierra #Chile #MagnoTerra');
     expect(copy.linkedin).toContain(
-      'La aplicacion de RIC N06 se evalua segun las condiciones del proyecto.',
+      'La aplicacion de RIC N06 se evalua segun las condiciones del proyecto.'
     );
     expect(copy.linkedin).not.toMatch(/SEC|Ω|\b10\s*(?:ohm|omega)\b/i);
     expect(copy.instagram).not.toMatch(/SEC|Ω|\b10\s*(?:ohm|omega)\b/i);

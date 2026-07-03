@@ -3,7 +3,8 @@ const INSTAGRAM_MAX_LENGTH = 500;
 const CTA_URL = 'magnoterra.cl/contacto';
 const REQUIRED_HASHTAGS = '#PuestaATierra #Chile #MagnoTerra';
 const DEFAULT_TOPIC = 'soluciones de puesta a tierra para proyectos en Chile';
-const RIC_N06_NOTE = 'La aplicacion de RIC N06 se evalua segun las condiciones del proyecto.';
+const RIC_N06_NOTE =
+  'La aplicacion de RIC N06 se evalua segun las condiciones del proyecto.';
 
 const JOB_FIELDS = [
   'title',
@@ -23,11 +24,18 @@ const toCleanText = (value) => {
 
   return String(value)
     .replace(/[_-]+/g, ' ')
-    .replace(/\d+(?:[.,]\d+)?\s*(?:ohm(?:ios?)?|omega|Ω)/gi, 'valores de resistencia')
-    .replace(/(?:ohm(?:ios?)?|omega|Ω)\s*\d+(?:[.,]\d+)?/gi, 'valores de resistencia')
+    .replace(
+      /\d+(?:[.,]\d+)?\s*(?:ohm(?:ios?)?|omega|Ω)/gi,
+      'valores de resistencia'
+    )
+    .replace(
+      /(?:ohm(?:ios?)?|omega|Ω)\s*\d+(?:[.,]\d+)?/gi,
+      'valores de resistencia'
+    )
     .replace(/\b(?:cert(?:ificacion|ificado)?\s*)?SEC\b/gi, '')
     .replace(/[\r\n\t]+/g, ' ')
     .replace(/\s+/g, ' ')
+    .replace(/\s+(?:con|y|e)\s*$/i, '')
     .trim();
 };
 
@@ -36,7 +44,9 @@ const toPlainString = (value) => {
     return '';
   }
 
-  return String(value).replace(/[\r\n\t]+/g, ' ').trim();
+  return String(value)
+    .replace(/[\r\n\t]+/g, ' ')
+    .trim();
 };
 
 const truncateAtWord = (text, maxLength) => {
@@ -53,6 +63,8 @@ const truncateAtWord = (text, maxLength) => {
 
   return `${clipped.slice(0, lastSpace).trimEnd()}.`;
 };
+
+const stripTrailingPeriod = (text) => text.replace(/\.+$/g, '');
 
 const getJobParts = (job) => {
   if (!job) {
@@ -90,15 +102,18 @@ const getVideoUrl = (video) => {
 
   const videoId = toPlainString(video?.video_id);
 
-  return videoId ? `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}` : '';
+  return videoId
+    ? `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`
+    : '';
 };
 
 export const createYoutubeUploadCopy = (video = {}) => {
   const topic = getTopic(video);
-  const shortTopic = truncateAtWord(topic, 120);
+  const linkedinTopic = stripTrailingPeriod(truncateAtWord(topic, 220));
+  const shortTopic = stripTrailingPeriod(truncateAtWord(topic, 120));
 
   const linkedinBody = [
-    `Compartimos un nuevo video de Magno Terra sobre ${truncateAtWord(topic, 220)}.`,
+    `Compartimos un nuevo video de Magno Terra sobre ${linkedinTopic}.`,
     'En cada obra revisamos el terreno, el alcance y los requisitos tecnicos para definir una solucion de puesta a tierra responsable.',
     RIC_N06_NOTE,
     `Conversemos en ${CTA_URL}`,
