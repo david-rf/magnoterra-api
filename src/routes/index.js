@@ -1,6 +1,7 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import { formatYoutubeUploadBatchMarkdown } from '../social/youtubeUploadBatch.js';
 
 const router = express.Router();
 
@@ -39,6 +40,13 @@ router.get('/', (req, res) => {
       api: '/api',
     },
   });
+});
+
+// Social copy webhook for uploaded YouTube batches
+router.post('/webhooks/youtube-upload-batch', (req, res) => {
+  const markdown = formatYoutubeUploadBatchMarkdown(req.body);
+
+  res.status(200).type('text/markdown').send(markdown);
 });
 
 export default router;
