@@ -1,8 +1,11 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import webhooksRouter from './webhooks.js';
 
 const router = express.Router();
+
+router.use('/webhooks', webhooksRouter);
 
 // Health check endpoint
 router.get('/health', (req, res) => {

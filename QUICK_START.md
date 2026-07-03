@@ -44,6 +44,7 @@ npm run format   # Formatear código
 - `GET /health` - Estado del servidor
 - `GET /db-check` - Verificación de BD
 - `GET /api` - Información de la API
+- `POST /api/webhooks/youtube-upload-batch` - Markdown para videos de YouTube
 
 ## 🐳 Docker (Opcional)
 
