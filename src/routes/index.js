@@ -1,8 +1,11 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import webhookRoutes from './webhooks.js';
 
 const router = express.Router();
+
+router.use(webhookRoutes);
 
 // Health check endpoint
 router.get('/health', (req, res) => {
@@ -36,6 +39,7 @@ router.get('/', (req, res) => {
     endpoints: {
       health: '/health',
       dbCheck: '/db-check',
+      webhooks: '/api/webhooks',
       api: '/api',
     },
   });
