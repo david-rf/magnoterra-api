@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import request from 'supertest';
+import app from '../index.js';
 import {
   createYoutubeUploadCopy,
   formatYoutubeUploadBatchMarkdown,
@@ -43,6 +45,27 @@ describe('YouTube upload batch social copy', () => {
     );
     expect(markdown.match(/2\. Copy LinkedIn empresa:/g)).toHaveLength(2);
     expect(markdown.match(/3\. Caption Instagram:/g)).toHaveLength(2);
+  });
+
+  it('responds with markdown from the webhook route', async () => {
+    const response = await request(app)
+      .post('/api/webhooks/youtube-upload-batch')
+      .send({
+        event: 'youtube_upload_batch',
+        videos: [
+          {
+            video_id: 'route-test',
+            url: 'https://youtu.be/route-test',
+            job: 'puesta a tierra comercial',
+          },
+        ],
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.headers['content-type']).toContain('text/markdown');
+    expect(response.text).toContain('1. URL: https://youtu.be/route-test');
+    expect(response.text).toContain('2. Copy LinkedIn empresa:');
+    expect(response.text).toContain('3. Caption Instagram:');
   });
 
   it('keeps required LinkedIn content within limits', () => {
