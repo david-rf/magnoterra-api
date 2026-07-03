@@ -3,28 +3,33 @@
 ## ⚡ Inicio Rápido (5 minutos)
 
 ### 1. Instalar Node.js
+
 ```powershell
 # Ejecutar como administrador
 .\install-node.ps1
 ```
 
 ### 2. Instalar dependencias
+
 ```bash
 npm install
 ```
 
 ### 3. Configurar variables
+
 ```bash
 cp env.example .env
 # Editar .env con tus credenciales
 ```
 
 ### 4. Ejecutar
+
 ```bash
 npm run dev
 ```
 
 ### 5. Verificar
+
 ```bash
 curl http://localhost:3000/health
 ```
