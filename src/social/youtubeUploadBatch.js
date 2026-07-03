@@ -23,8 +23,8 @@ const toCleanText = (value) => {
 
   return String(value)
     .replace(/[_-]+/g, ' ')
-    .replace(/\b\d+(?:[.,]\d+)?\s*(?:ohm(?:ios?)?|omega|Ω)\b/gi, 'valores de resistencia')
-    .replace(/\b(?:ohm(?:ios?)?|omega|Ω)\s*\d+(?:[.,]\d+)?\b/gi, 'valores de resistencia')
+    .replace(/\d+(?:[.,]\d+)?\s*(?:ohm(?:ios?)?|omega|Ω)/gi, 'valores de resistencia')
+    .replace(/(?:ohm(?:ios?)?|omega|Ω)\s*\d+(?:[.,]\d+)?/gi, 'valores de resistencia')
     .replace(/\b(?:cert(?:ificacion|ificado)?\s*)?SEC\b/gi, '')
     .replace(/[\r\n\t]+/g, ' ')
     .replace(/\s+/g, ' ')
