@@ -76,6 +76,14 @@ curl http://localhost:3000/health
 - `GET /api` - Información de la API
 - `GET /api/health` - Health check de la API
 - `GET /api/db-check` - Verificación de BD de la API
+- `POST /api/webhooks/youtube-upload-batch` - Genera copy Markdown para videos subidos a YouTube
+- `POST /webhooks/youtube-upload-batch` - Alias directo del webhook de videos
+
+### Webhook YouTube upload batch
+
+Recibe JSON con `event: "youtube_upload_batch"` y `videos[]` con `video_id`, `url` y `job`.
+Responde `text/markdown` con URL, copy de LinkedIn empresa y caption de Instagram por video.
+Si el payload no trae videos utilizables, responde `NO_VIDEOS`.
 
 ## 🐳 Docker
 

@@ -10,6 +10,7 @@ import logger from './src/lib/logger.js';
 import dbPool from './src/db/pool.js';
 import routes from './src/routes/index.js';
 import { errorHandler, notFound } from './src/middlewares/index.js';
+import { youtubeUploadBatchWebhook } from './src/webhooks/youtubeUploadBatch.js';
 
 // Load environment variables
 dotenv.config();
@@ -75,6 +76,8 @@ app.get('/db-check', async (req, res) => {
     });
   }
 });
+
+app.post('/webhooks/youtube-upload-batch', youtubeUploadBatchWebhook);
 
 // API routes
 app.use('/api', routes);
