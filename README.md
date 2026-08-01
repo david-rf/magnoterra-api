@@ -195,6 +195,24 @@ magnoterra-api/
         └── ci.yml         # Pipeline de CI/CD
 ```
 
+## 📣 Webhooks de redes sociales
+
+- `POST /api/webhooks/youtube-upload-batch` - Recibe `event=youtube_upload_batch` con `videos[]` y responde markdown listo para LinkedIn e Instagram. Si no hay videos, responde `NO_VIDEOS`.
+
+### Ejemplo de payload
+```json
+{
+  "event": "youtube_upload_batch",
+  "videos": [
+    {
+      "video_id": "abc123",
+      "url": "https://youtu.be/abc123",
+      "job": "publish-social-copy"
+    }
+  ]
+}
+```
+
 ## 🔮 Mercado Pago (Futuro)
 
 ### Endpoints planificados
