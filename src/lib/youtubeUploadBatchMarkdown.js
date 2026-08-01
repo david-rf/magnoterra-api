@@ -3,7 +3,8 @@ const CONTACT_URL = 'magnoterra.cl/contacto';
 const LINKEDIN_MAX_LENGTH = 900;
 const INSTAGRAM_MAX_LENGTH = 500;
 
-const asTrimmedString = (value) => (typeof value === 'string' ? value.trim() : '');
+const asTrimmedString = (value) =>
+  typeof value === 'string' ? value.trim() : '';
 
 const buildVideoUrl = (video) => {
   const explicitUrl = asTrimmedString(video?.url);
@@ -13,7 +14,9 @@ const buildVideoUrl = (video) => {
   }
 
   const videoId = asTrimmedString(video?.video_id);
-  return videoId ? `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}` : '';
+  return videoId
+    ? `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`
+    : '';
 };
 
 const assertLength = (label, copy, maxLength) => {
@@ -22,7 +25,8 @@ const assertLength = (label, copy, maxLength) => {
   }
 };
 
-export const hasVideos = (payload) => Array.isArray(payload?.videos) && payload.videos.length > 0;
+export const hasVideos = (payload) =>
+  Array.isArray(payload?.videos) && payload.videos.length > 0;
 
 export const buildLinkedInCopy = () => {
   const copy = [
