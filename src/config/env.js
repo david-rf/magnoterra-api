@@ -14,6 +14,16 @@ const envSchema = z.object({
 });
 
 // Validate environment variables
-const env = envSchema.parse(process.env);
+const testEnvDefaults = process.env.NODE_ENV === 'test' || process.env.VITEST === 'true'
+  ? {
+    NODE_ENV: 'test',
+    DATABASE_URL: 'mysql://test:test@localhost:3306/test',
+  }
+  : {};
+
+const env = envSchema.parse({
+  ...testEnvDefaults,
+  ...process.env,
+});
 
 export default env;
