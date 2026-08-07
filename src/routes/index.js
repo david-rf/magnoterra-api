@@ -1,8 +1,15 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import { buildYoutubeUploadBatchMarkdown } from '../social/youtubeUploadBatch.js';
 
 const router = express.Router();
+
+const sendYoutubeUploadBatchMarkdown = (req, res) => {
+  const markdown = buildYoutubeUploadBatchMarkdown(req.body);
+
+  res.type('text/markdown').send(markdown);
+};
 
 // Health check endpoint
 router.get('/health', (req, res) => {
@@ -15,17 +22,30 @@ router.get('/health', (req, res) => {
 });
 
 // Database connection check
-router.get('/db-check', asyncHandler(async (req, res) => {
-  try {
-    const result = await dbPool.query('SELECT 1 as ok');
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({
-      error: 'Database connection failed',
-      message: error.message,
-    });
+router.get(
+  '/db-check',
+  asyncHandler(async (req, res) => {
+    try {
+      const result = await dbPool.query('SELECT 1 as ok');
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({
+        error: 'Database connection failed',
+        message: error.message,
+      });
+    }
+  })
+);
+
+// Webhook for publishing copy from YouTube upload batches.
+router.post('/webhooks/youtube-upload-batch', sendYoutubeUploadBatchMarkdown);
+router.post('/webhooks', (req, res) => {
+  if (req.body?.event !== 'youtube_upload_batch') {
+    return res.status(400).type('text/markdown').send('NO_VIDEOS');
   }
-}));
+
+  return sendYoutubeUploadBatchMarkdown(req, res);
+});
 
 // API info
 router.get('/', (req, res) => {
