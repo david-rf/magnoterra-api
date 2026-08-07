@@ -76,6 +76,8 @@ curl http://localhost:3000/health
 - `GET /api` - Información de la API
 - `GET /api/health` - Health check de la API
 - `GET /api/db-check` - Verificación de BD de la API
+- `POST /api/webhooks` - Webhook con `event=youtube_upload_batch`
+- `POST /api/webhooks/youtube-upload-batch` - Webhook directo para batches de videos YouTube
 
 ## 🐳 Docker
 
