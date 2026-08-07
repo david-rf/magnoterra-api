@@ -1,6 +1,7 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import { buildYoutubeUploadBatchMarkdown } from '../social/youtubeUploadBatch.js';
 
 const router = express.Router();
 
@@ -26,6 +27,16 @@ router.get('/db-check', asyncHandler(async (req, res) => {
     });
   }
 }));
+
+const youtubeUploadBatchWebhook = (req, res) => {
+  const markdown = buildYoutubeUploadBatchMarkdown(req.body);
+  const contentType = markdown === 'NO_VIDEOS' ? 'text/plain' : 'text/markdown';
+
+  res.type(contentType).send(markdown);
+};
+
+router.post('/webhooks', youtubeUploadBatchWebhook);
+router.post('/webhooks/youtube-upload-batch', youtubeUploadBatchWebhook);
 
 // API info
 router.get('/', (req, res) => {
