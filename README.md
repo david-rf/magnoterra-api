@@ -201,6 +201,10 @@ magnoterra-api/
 - `POST /api/payments/create-preference` - Crear preferencia de pago
 - `POST /api/webhooks/mp` - Webhook de notificaciones
 
+## 📹 Webhooks de video
+
+- `POST /api/webhooks/youtube-upload-batch` - Genera markdown para publicaciones de LinkedIn e Instagram desde un payload `youtube_upload_batch`.
+
 ### Checklist de implementación
 - [ ] Instalar SDK de Mercado Pago
 - [ ] Configurar credenciales de producción
