@@ -22,6 +22,7 @@ export default [
         clearInterval: 'readonly',
         setImmediate: 'readonly',
         clearImmediate: 'readonly',
+        URL: 'readonly',
       },
     },
     rules: {
