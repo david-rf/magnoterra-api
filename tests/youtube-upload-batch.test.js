@@ -9,7 +9,9 @@ import {
 } from '../src/social/youtubeUploadBatch.js';
 
 const extractLinkedinCopy = (markdown) =>
-  markdown.match(/2\. Copy LinkedIn empresa: ([\s\S]*?)\n3\. Caption Instagram:/)[1].trim();
+  markdown
+    .match(/2\. Copy LinkedIn empresa: ([\s\S]*?)\n3\. Caption Instagram:/)[1]
+    .trim();
 
 const extractInstagramCaption = (markdown) =>
   markdown.match(/3\. Caption Instagram: ([\s\S]*)$/)[1].trim();

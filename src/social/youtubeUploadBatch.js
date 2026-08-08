@@ -70,8 +70,7 @@ export const formatVideoSocialMarkdown = (video) => {
   const topic = getJobTopic(video?.job, 160);
 
   const linkedinPrefix = 'Nuevo video: ';
-  const linkedinSuffix =
-    `. En Magno Terra acompanamos a empresas y equipos tecnicos en sistemas de puesta a tierra con foco en seguridad, continuidad operacional y decisiones ajustadas al alcance real de la instalacion. Cuando corresponde al proyecto, revisamos criterios aplicables como RIC N06. Mira el video y conversemos sobre tu proyecto: ${CONTACT_URL}\n\n${LINKEDIN_HASHTAGS}`;
+  const linkedinSuffix = `. En Magno Terra acompanamos a empresas y equipos tecnicos en sistemas de puesta a tierra con foco en seguridad, continuidad operacional y decisiones ajustadas al alcance real de la instalacion. Cuando corresponde al proyecto, revisamos criterios aplicables como RIC N06. Mira el video y conversemos sobre tu proyecto: ${CONTACT_URL}\n\n${LINKEDIN_HASHTAGS}`;
   const linkedinCopy = `${linkedinPrefix}${fitTopic(
     topic,
     linkedinPrefix,
