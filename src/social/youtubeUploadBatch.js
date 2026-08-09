@@ -11,7 +11,8 @@ const restrictedPatterns = [
   /\bRIC\s*N0?6\b/gi,
 ];
 
-const normalizeWhitespace = (value) => String(value).replace(/\s+/g, ' ').trim();
+const normalizeWhitespace = (value) =>
+  String(value).replace(/\s+/g, ' ').trim();
 
 const truncateAtWord = (value, maxLength) => {
   if (value.length <= maxLength) {

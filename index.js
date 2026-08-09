@@ -21,12 +21,15 @@ const port = env.PORT;
 app.use(helmet());
 
 // CORS configuration (temporary * for MVP)
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://yourdomain.com'] // TODO: Configure production domains
-    : '*',
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? ['https://yourdomain.com'] // TODO: Configure production domains
+        : '*',
+    credentials: true,
+  })
+);
 
 // Rate limiting
 const limiter = rateLimit({
@@ -45,11 +48,13 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Logging middleware
-app.use(morgan('combined', {
-  stream: {
-    write: (message) => logger.info(message.trim()),
-  },
-}));
+app.use(
+  morgan('combined', {
+    stream: {
+      write: (message) => logger.info(message.trim()),
+    },
+  })
+);
 
 // Health check endpoint (before API routes)
 app.get('/health', (req, res) => {
@@ -109,7 +114,7 @@ if (env.NODE_ENV !== 'test') {
     try {
       // Test database connection
       await dbPool.getPool();
-      
+
       logger.info(`🚀 Magno Terra API server running on port ${port}`);
       logger.info(`📊 Environment: ${env.NODE_ENV}`);
       logger.info(`🔗 Health check: http://localhost:${port}/health`);
@@ -123,4 +128,4 @@ if (env.NODE_ENV !== 'test') {
 }
 
 export { server };
-export default app; 
+export default app;

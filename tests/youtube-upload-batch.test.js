@@ -51,12 +51,8 @@ describe('YouTube upload batch markdown', () => {
     expect(markdown).toContain('### Video 2');
     expect(markdown).toContain('1) URL: https://youtube.com/watch?v=def456');
 
-    const linkedinCopies = markdown.match(
-      /^2\) Copy LinkedIn empresa: .+$/gm
-    );
-    const instagramCaptions = markdown.match(
-      /^3\) Caption Instagram: .+$/gm
-    );
+    const linkedinCopies = markdown.match(/^2\) Copy LinkedIn empresa: .+$/gm);
+    const instagramCaptions = markdown.match(/^3\) Caption Instagram: .+$/gm);
 
     expect(linkedinCopies).toHaveLength(2);
     expect(instagramCaptions).toHaveLength(2);
@@ -104,7 +100,9 @@ describe('YouTube upload batch markdown', () => {
     const instagram = extractInstagramCaption(markdown);
 
     expect(markdown).not.toContain('javascript:alert');
-    expect(linkedin).not.toMatch(/\b\d+(?:[,.]\d+)?\s*(ohms?|ohmios?|omega)\b/i);
+    expect(linkedin).not.toMatch(
+      /\b\d+(?:[,.]\d+)?\s*(ohms?|ohmios?|omega)\b/i
+    );
     expect(linkedin).not.toMatch(/\bSEC\b/i);
     expect(instagram).not.toMatch(/\bSEC\b/i);
     expect(markdown).toContain('1) URL: https://youtu.be/abc123');
