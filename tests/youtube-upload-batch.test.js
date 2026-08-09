@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import request from 'supertest';
 
+import app from '../index.js';
 import {
   CTA_URL,
   INSTAGRAM_MAX_LENGTH,
@@ -106,5 +108,35 @@ describe('YouTube upload batch markdown', () => {
     expect(linkedin).not.toMatch(/\bSEC\b/i);
     expect(instagram).not.toMatch(/\bSEC\b/i);
     expect(markdown).toContain('1) URL: https://youtu.be/abc123');
+  });
+});
+
+describe('YouTube upload batch webhook endpoint', () => {
+  it('returns markdown from POST /api/webhooks/youtube', async () => {
+    const response = await request(app)
+      .post('/api/webhooks/youtube')
+      .send({
+        event: 'youtube_upload_batch',
+        videos: [
+          {
+            video_id: 'abc123',
+            url: 'https://youtu.be/abc123',
+            job: 'Obra industrial norte',
+          },
+        ],
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.headers['content-type']).toContain('text/markdown');
+    expect(response.text).toContain('1) URL: https://youtu.be/abc123');
+    expect(response.text).toContain(CTA_URL);
+  });
+
+  it('returns NO_VIDEOS when the webhook payload is empty', async () => {
+    const response = await request(app).post('/api/webhooks/youtube').send({});
+
+    expect(response.status).toBe(200);
+    expect(response.headers['content-type']).toContain('text/markdown');
+    expect(response.text).toBe('NO_VIDEOS');
   });
 });
