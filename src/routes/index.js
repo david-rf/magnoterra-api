@@ -1,6 +1,7 @@
 import express from 'express';
 import dbPool from '../db/pool.js';
 import { asyncHandler } from '../middlewares/error.js';
+import { sendYoutubeUploadBatchMarkdown } from '../lib/socialVideoMarkdown.js';
 
 const router = express.Router();
 
@@ -15,17 +16,24 @@ router.get('/health', (req, res) => {
 });
 
 // Database connection check
-router.get('/db-check', asyncHandler(async (req, res) => {
-  try {
-    const result = await dbPool.query('SELECT 1 as ok');
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({
-      error: 'Database connection failed',
-      message: error.message,
-    });
-  }
-}));
+router.get(
+  '/db-check',
+  asyncHandler(async (req, res) => {
+    try {
+      const result = await dbPool.query('SELECT 1 as ok');
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({
+        error: 'Database connection failed',
+        message: error.message,
+      });
+    }
+  })
+);
+
+router.post('/webhooks', sendYoutubeUploadBatchMarkdown);
+
+router.post('/webhooks/youtube-upload-batch', sendYoutubeUploadBatchMarkdown);
 
 // API info
 router.get('/', (req, res) => {
@@ -37,6 +45,8 @@ router.get('/', (req, res) => {
       health: '/health',
       dbCheck: '/db-check',
       api: '/api',
+      webhooks: '/api/webhooks',
+      youtubeUploadBatchWebhook: '/api/webhooks/youtube-upload-batch',
     },
   });
 });

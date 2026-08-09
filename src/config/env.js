@@ -6,14 +6,23 @@ dotenv.config();
 
 // Environment schema validation
 const envSchema = z.object({
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  NODE_ENV: z
+    .enum(['development', 'production', 'test'])
+    .default('development'),
   PORT: z.string().transform(Number).default('3000'),
   DATABASE_URL: z.string().url('DATABASE_URL must be a valid URL'),
   MP_PUBLIC_KEY: z.string().optional(),
   MP_ACCESS_TOKEN: z.string().optional(),
 });
 
+const envInput = {
+  ...process.env,
+  ...(process.env.NODE_ENV === 'test' && !process.env.DATABASE_URL
+    ? { DATABASE_URL: 'mysql://test:test@localhost:3306/test' }
+    : {}),
+};
+
 // Validate environment variables
-const env = envSchema.parse(process.env);
+const env = envSchema.parse(envInput);
 
 export default env;
