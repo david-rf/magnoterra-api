@@ -19,11 +19,13 @@ class MercadoPagoService {
       // TODO: Implement with Mercado Pago SDK
       logger.info('Creating payment preference:', preferenceData);
       
+      const preferenceId = `pref_${Date.now()}`;
+
       // Placeholder response
       return {
-        id: 'pref_' + Date.now(),
-        init_point: 'https://www.mercadopago.com/checkout/v1/redirect?pref_id=pref_' + Date.now(),
-        sandbox_init_point: 'https://sandbox.mercadopago.com/checkout/v1/redirect?pref_id=pref_' + Date.now(),
+        id: preferenceId,
+        init_point: `https://www.mercadopago.com/checkout/v1/redirect?pref_id=${preferenceId}`,
+        sandbox_init_point: `https://sandbox.mercadopago.com/checkout/v1/redirect?pref_id=${preferenceId}`,
       };
     } catch (error) {
       logger.error('Error creating payment preference:', error);
