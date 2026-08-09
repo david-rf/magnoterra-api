@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import request from 'supertest';
+import app from '../index.js';
 import {
   CONTACT_URL,
   HASHTAGS,
@@ -77,5 +79,26 @@ describe('YouTube upload batch social copy', () => {
     expect(markdown).not.toMatch(/[ΩΩ]/);
     expect(markdown).not.toMatch(/\bohm(?:ios?|s)?\b/i);
     expect(markdown).not.toMatch(/\bomega\b/i);
+  });
+
+  it('serves markdown from the webhook endpoint', async () => {
+    const response = await request(app)
+      .post('/api/webhooks/youtube-upload-batch')
+      .send({
+        event: 'youtube_upload_batch',
+        videos: [
+          {
+            video_id: 'route-test',
+            url: 'https://youtu.be/route-test',
+            job: 'revision de malla',
+          },
+        ],
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.headers['content-type']).toMatch(/text\/markdown/);
+    expect(response.text).toContain('1) URL: https://youtu.be/route-test');
+    expect(response.text).toContain('2) Copy LinkedIn empresa:');
+    expect(response.text).toContain('3) Caption Instagram:');
   });
 });
