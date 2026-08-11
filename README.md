@@ -76,6 +76,26 @@ curl http://localhost:3000/health
 - `GET /api` - Información de la API
 - `GET /api/health` - Health check de la API
 - `GET /api/db-check` - Verificación de BD de la API
+- `POST /api/webhooks` - Webhook `youtube_upload_batch` para generar copy social en Markdown
+
+#### Webhook YouTube Upload Batch
+
+Payload esperado:
+
+```json
+{
+  "event": "youtube_upload_batch",
+  "videos": [
+    {
+      "video_id": "abc123",
+      "url": "https://youtu.be/abc123",
+      "job": "obra industrial"
+    }
+  ]
+}
+```
+
+La respuesta es `text/markdown` con URL, copy LinkedIn empresa y caption Instagram por video. Si no hay videos validos, responde `NO_VIDEOS`.
 
 ## 🐳 Docker
 
