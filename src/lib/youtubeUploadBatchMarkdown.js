@@ -33,7 +33,7 @@ const trimToLimit = (text, limit) => {
     return text;
   }
 
-  return text.slice(0, limit - 1).trimEnd() + '.';
+  return `${text.slice(0, limit - 1).trimEnd()}.`;
 };
 
 const buildLinkedInCopy = (job) => {
