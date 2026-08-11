@@ -76,6 +76,7 @@ curl http://localhost:3000/health
 - `GET /api` - Información de la API
 - `GET /api/health` - Health check de la API
 - `GET /api/db-check` - Verificación de BD de la API
+- `POST /api/webhooks/youtube-upload-batch` - Genera markdown para publicaciones sociales desde un batch de videos de YouTube
 
 ## 🐳 Docker
 
