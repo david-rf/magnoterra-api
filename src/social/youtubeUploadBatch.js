@@ -32,7 +32,11 @@ const getVideoUrl = (video) => {
 };
 
 const getVideos = (payload) => {
-  if (!payload || payload.event !== EVENT_NAME || !Array.isArray(payload.videos)) {
+  if (
+    !payload ||
+    payload.event !== EVENT_NAME ||
+    !Array.isArray(payload.videos)
+  ) {
     return [];
   }
 
@@ -47,7 +51,10 @@ export const buildYoutubeUploadBatchMarkdown = (payload) => {
   }
 
   const linkedInCopy = ensureMaxLength(LINKEDIN_COPY, LINKEDIN_MAX_LENGTH);
-  const instagramCaption = ensureMaxLength(INSTAGRAM_CAPTION, INSTAGRAM_MAX_LENGTH);
+  const instagramCaption = ensureMaxLength(
+    INSTAGRAM_CAPTION,
+    INSTAGRAM_MAX_LENGTH
+  );
 
   return videos
     .map((video, index) => {

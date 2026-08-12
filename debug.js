@@ -9,7 +9,10 @@ console.log('- NODE_ENV:', process.env.NODE_ENV);
 console.log('- PORT:', process.env.PORT);
 console.log('- DATABASE_URL:', process.env.DATABASE_URL ? 'SET' : 'NOT SET');
 console.log('- MP_PUBLIC_KEY:', process.env.MP_PUBLIC_KEY ? 'SET' : 'NOT SET');
-console.log('- MP_ACCESS_TOKEN:', process.env.MP_ACCESS_TOKEN ? 'SET' : 'NOT SET');
+console.log(
+  '- MP_ACCESS_TOKEN:',
+  process.env.MP_ACCESS_TOKEN ? 'SET' : 'NOT SET'
+);
 
 // Listar archivos del directorio
 const fs = require('fs');

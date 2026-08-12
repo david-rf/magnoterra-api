@@ -28,7 +28,12 @@ describe('YouTube upload batch social copy', () => {
   it('returns NO_VIDEOS for empty payloads', () => {
     expect(buildYoutubeUploadBatchMarkdown()).toBe('NO_VIDEOS');
     expect(buildYoutubeUploadBatchMarkdown({})).toBe('NO_VIDEOS');
-    expect(buildYoutubeUploadBatchMarkdown({ event: 'youtube_upload_batch', videos: [] })).toBe('NO_VIDEOS');
+    expect(
+      buildYoutubeUploadBatchMarkdown({
+        event: 'youtube_upload_batch',
+        videos: [],
+      })
+    ).toBe('NO_VIDEOS');
   });
 
   it('builds markdown with the requested social copy fields', () => {
@@ -70,7 +75,9 @@ describe('YouTube upload batch social copy', () => {
 
     expect(response.status).toBe(200);
     expect(response.headers['content-type']).toContain('text/markdown');
-    expect(response.text).toContain('1) URL: https://www.youtube.com/watch?v=video-1');
+    expect(response.text).toContain(
+      '1) URL: https://www.youtube.com/watch?v=video-1'
+    );
     expect(response.text).toContain('2) Copy LinkedIn empresa:');
     expect(response.text).toContain('3) Caption Instagram:');
   });
