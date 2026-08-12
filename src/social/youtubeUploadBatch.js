@@ -16,7 +16,7 @@ const ensureMaxLength = (value, maxLength) => {
     return value;
   }
 
-  return value.slice(0, maxLength - 1).trimEnd() + '.';
+  return `${value.slice(0, maxLength - 1).trimEnd()}.`;
 };
 
 const getVideoUrl = (video) => {
