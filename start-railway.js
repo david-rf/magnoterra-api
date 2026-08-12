@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import routes from './src/routes/index.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -64,6 +65,8 @@ app.get('/api', (req, res) => {
     }
   });
 });
+
+app.use('/api', routes);
 
 // Error handling básico
 app.use((err, req, res, next) => {
