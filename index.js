@@ -101,21 +101,23 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
-// Start server
-app.listen(port, async () => {
-  try {
-    // Test database connection
-    await dbPool.getPool();
+if (env.NODE_ENV !== 'test') {
+  // Start server
+  app.listen(port, async () => {
+    try {
+      // Test database connection
+      await dbPool.getPool();
     
-    logger.info(`🚀 Magno Terra API server running on port ${port}`);
-    logger.info(`📊 Environment: ${env.NODE_ENV}`);
-    logger.info(`🔗 Health check: http://localhost:${port}/health`);
-    logger.info(`🔗 Database check: http://localhost:${port}/db-check`);
-    logger.info(`🔗 API base: http://localhost:${port}/api`);
-  } catch (error) {
-    logger.error('Failed to start server:', error.message);
-    process.exit(1);
-  }
-});
+      logger.info(`🚀 Magno Terra API server running on port ${port}`);
+      logger.info(`📊 Environment: ${env.NODE_ENV}`);
+      logger.info(`🔗 Health check: http://localhost:${port}/health`);
+      logger.info(`🔗 Database check: http://localhost:${port}/db-check`);
+      logger.info(`🔗 API base: http://localhost:${port}/api`);
+    } catch (error) {
+      logger.error('Failed to start server:', error.message);
+      process.exit(1);
+    }
+  });
+}
 
 export default app; 
