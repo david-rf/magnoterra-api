@@ -2,9 +2,16 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { formatYoutubeUploadBatchResponse } from './src/social/youtubeUploadBatch.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+const sendYoutubeUploadBatchMarkdown = (req, res) => {
+  const markdown = formatYoutubeUploadBatchResponse(req.body);
+
+  res.type('text/markdown').send(markdown);
+};
 
 // Debug info al inicio
 console.log('=== RAILWAY STARTUP DEBUG ===');
@@ -60,10 +67,15 @@ app.get('/api', (req, res) => {
     endpoints: {
       health: '/health',
       root: '/',
-      api: '/api'
+      api: '/api',
+      youtubeUploadBatchWebhook: '/api/webhooks/youtube-upload-batch'
     }
   });
 });
+
+// Social video webhook responses
+app.post('/api/webhooks', sendYoutubeUploadBatchMarkdown);
+app.post('/api/webhooks/youtube-upload-batch', sendYoutubeUploadBatchMarkdown);
 
 // Error handling básico
 app.use((err, req, res, next) => {
@@ -80,7 +92,7 @@ app.use('*', (req, res) => {
   res.status(404).json({ 
     error: 'Not Found',
     path: req.originalUrl,
-    available: ['/', '/health', '/api']
+    available: ['/', '/health', '/api', '/api/webhooks/youtube-upload-batch']
   });
 });
 
