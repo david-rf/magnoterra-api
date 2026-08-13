@@ -29,7 +29,7 @@ const truncateText = (value, maxChars) => {
     return value;
   }
 
-  return value.slice(0, maxChars - 3).trimEnd() + '...';
+  return `${value.slice(0, maxChars - 3).trimEnd()}...`;
 };
 
 const extractJobText = (job) => {
