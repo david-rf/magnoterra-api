@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import request from 'supertest';
+import app from '../index.js';
 import {
   createInstagramCaption,
   createLinkedInCompanyCopy,
@@ -57,6 +59,27 @@ describe('YouTube upload batch social copy', () => {
     expect(linkedInCopy).toContain('RIC N06 se evalua segun las condiciones de cada proyecto');
     expect(instagramCaption).not.toMatch(/\bSEC\b/i);
     expect(instagramCaption).not.toMatch(/\b\d+(?:[.,]\d+)?\s*(?:ohm(?:s)?|omega)\b/i);
+  });
+
+  it('serves the generated markdown from the API webhook endpoint', async () => {
+    const response = await request(app)
+      .post('/api/webhooks/youtube-upload-batch')
+      .send({
+        event: 'youtube_upload_batch',
+        videos: [
+          {
+            video_id: 'abc123',
+            url: 'https://youtu.be/abc123',
+            job: 'Instalacion de puesta a tierra industrial',
+          },
+        ],
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.headers['content-type']).toContain('text/markdown');
+    expect(response.text).toContain('1) URL\nhttps://youtu.be/abc123');
+    expect(response.text).toContain('2) Copy LinkedIn empresa');
+    expect(response.text).toContain('3) Caption Instagram');
   });
 });
 
