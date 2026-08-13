@@ -13,8 +13,14 @@ const createTestApp = () => {
 };
 
 const extractSection = (markdown, title) => {
-  const [, section = ''] = markdown.split(`${title}\n`);
-  return section.split('\n\n')[0];
+  const start = markdown.indexOf(`${title}\n`);
+  if (start === -1) {
+    return '';
+  }
+
+  const section = markdown.slice(start + title.length + 1);
+  const nextHeading = section.search(/\n\n\d\) /);
+  return (nextHeading === -1 ? section : section.slice(0, nextHeading)).trim();
 };
 
 describe('YouTube upload batch markdown', () => {
