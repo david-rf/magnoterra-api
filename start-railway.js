@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { buildYoutubeUploadBatchMarkdown } from './src/social/youtubeUploadBatch.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -60,9 +61,17 @@ app.get('/api', (req, res) => {
     endpoints: {
       health: '/health',
       root: '/',
-      api: '/api'
+      api: '/api',
+      youtubeUploadBatchWebhook: '/api/webhooks/youtube-upload-batch'
     }
   });
+});
+
+// YouTube upload batch webhook for social copy automation
+app.post('/api/webhooks/youtube-upload-batch', (req, res) => {
+  const markdown = buildYoutubeUploadBatchMarkdown(req.body);
+
+  res.type('text/markdown').send(markdown);
 });
 
 // Error handling básico
