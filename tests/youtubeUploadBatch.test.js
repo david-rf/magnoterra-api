@@ -9,7 +9,12 @@ describe('youtube upload batch markdown', () => {
   it('returns NO_VIDEOS when the payload is empty', () => {
     expect(buildYoutubeUploadBatchMarkdown()).toBe('NO_VIDEOS');
     expect(buildYoutubeUploadBatchMarkdown({})).toBe('NO_VIDEOS');
-    expect(buildYoutubeUploadBatchMarkdown({ event: 'youtube_upload_batch', videos: [] })).toBe('NO_VIDEOS');
+    expect(
+      buildYoutubeUploadBatchMarkdown({
+        event: 'youtube_upload_batch',
+        videos: [],
+      })
+    ).toBe('NO_VIDEOS');
   });
 
   it('formats one markdown block for each video', () => {
@@ -58,6 +63,8 @@ describe('youtube upload batch markdown', () => {
 
     expect(markdown).not.toMatch(/\b\d+(?:[.,]\d+)?\s*(?:ohms?|omega?s?|Ω)\b/i);
     expect(markdown).not.toMatch(/\bcertificaci[oó]n\s+SEC\b/i);
-    expect(markdown).toContain('RIC N06 siempre debe evaluarse según el proyecto');
+    expect(markdown).toContain(
+      'RIC N06 siempre debe evaluarse según el proyecto'
+    );
   });
 });

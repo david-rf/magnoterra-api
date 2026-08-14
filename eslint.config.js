@@ -32,9 +32,17 @@ export default [
       'object-shorthand': 'error',
       'prefer-template': 'error',
     },
-    env: {
-      node: true,
-      es2022: true,
+  },
+  {
+    files: ['tests/**/*.js'],
+    languageOptions: {
+      globals: {
+        beforeEach: 'readonly',
+        describe: 'readonly',
+        expect: 'readonly',
+        it: 'readonly',
+        vi: 'readonly',
+      },
     },
   },
 ];

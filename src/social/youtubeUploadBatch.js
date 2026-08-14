@@ -6,7 +6,10 @@ const OMEGA_VALUE_PATTERN = /\b\d+(?:[.,]\d+)?\s*(?:ohms?|omega?s?|Ω)\b/gi;
 const SEC_CERT_PATTERN = /\b(?:certificaci[oó]n|certificado|cert\.?)\s+SEC\b/gi;
 const MARKDOWN_CONTROL_PATTERN = /[<>{}[\]()#*_`|]/g;
 
-const normalizeText = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
+const normalizeText = (value) =>
+  String(value ?? '')
+    .replace(/\s+/g, ' ')
+    .trim();
 
 const sanitizeJob = (job) => {
   const cleanJob = normalizeText(job)
@@ -26,7 +29,9 @@ const sanitizeUrl = (url, videoId) => {
   }
 
   const cleanVideoId = normalizeText(videoId).replace(/[^a-zA-Z0-9_-]/g, '');
-  return cleanVideoId ? `https://www.youtube.com/watch?v=${cleanVideoId}` : 'URL no disponible';
+  return cleanVideoId
+    ? `https://www.youtube.com/watch?v=${cleanVideoId}`
+    : 'URL no disponible';
 };
 
 const truncate = (text, maxLength) => {
@@ -72,11 +77,17 @@ export const buildVideoMarkdown = (video) => {
 };
 
 export const buildYoutubeUploadBatchMarkdown = (payload) => {
-  if (!payload || !Array.isArray(payload.videos) || payload.videos.length === 0) {
+  if (
+    !payload ||
+    !Array.isArray(payload.videos) ||
+    payload.videos.length === 0
+  ) {
     return 'NO_VIDEOS';
   }
 
-  const videos = payload.videos.filter((video) => video && typeof video === 'object');
+  const videos = payload.videos.filter(
+    (video) => video && typeof video === 'object'
+  );
 
   if (videos.length === 0) {
     return 'NO_VIDEOS';
