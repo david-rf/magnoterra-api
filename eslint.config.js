@@ -12,6 +12,7 @@ export default [
         Buffer: 'readonly',
         __dirname: 'readonly',
         __filename: 'readonly',
+        URL: 'readonly',
         global: 'readonly',
         module: 'readonly',
         require: 'readonly',
@@ -31,10 +32,6 @@ export default [
       'no-var': 'error',
       'object-shorthand': 'error',
       'prefer-template': 'error',
-    },
-    env: {
-      node: true,
-      es2022: true,
     },
   },
 ];
