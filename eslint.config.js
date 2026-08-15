@@ -33,9 +33,5 @@ export default [
       'object-shorthand': 'error',
       'prefer-template': 'error',
     },
-    env: {
-      node: true,
-      es2022: true,
-    },
   },
 ];
