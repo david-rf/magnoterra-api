@@ -12,6 +12,7 @@ export default [
         Buffer: 'readonly',
         __dirname: 'readonly',
         __filename: 'readonly',
+        URL: 'readonly',
         global: 'readonly',
         module: 'readonly',
         require: 'readonly',
