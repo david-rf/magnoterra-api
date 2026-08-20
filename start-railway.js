@@ -17,7 +17,10 @@ console.log('- NODE_ENV:', process.env.NODE_ENV);
 console.log('- PORT:', process.env.PORT);
 console.log('- DATABASE_URL:', process.env.DATABASE_URL ? 'SET' : 'NOT SET');
 console.log('- MP_PUBLIC_KEY:', process.env.MP_PUBLIC_KEY ? 'SET' : 'NOT SET');
-console.log('- MP_ACCESS_TOKEN:', process.env.MP_ACCESS_TOKEN ? 'SET' : 'NOT SET');
+console.log(
+  '- MP_ACCESS_TOKEN:',
+  process.env.MP_ACCESS_TOKEN ? 'SET' : 'NOT SET'
+);
 
 // Middleware básico
 app.use(helmet());
@@ -68,16 +71,19 @@ app.get('/api', (req, res) => {
 // Error handling básico
 app.use((err, req, res, _next) => {
   console.error('Error occurred:', err);
-  res.status(500).json({ 
+  res.status(500).json({
     error: 'Internal Server Error',
-    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong',
+    message:
+      process.env.NODE_ENV === 'development'
+        ? err.message
+        : 'Something went wrong',
   });
 });
 
 // 404 handler
 app.use('*', (req, res) => {
   console.log('404 for path:', req.originalUrl);
-  res.status(404).json({ 
+  res.status(404).json({
     error: 'Not Found',
     path: req.originalUrl,
     available: ['/', '/health', '/api'],

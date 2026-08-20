@@ -22,9 +22,18 @@ const createApp = () => {
 describe('YouTube upload batch social copy', () => {
   it('returns NO_VIDEOS when payload is empty or has no publishable videos', () => {
     expect(formatYoutubeUploadBatchMarkdown()).toBe('NO_VIDEOS');
-    expect(formatYoutubeUploadBatchMarkdown({ event: 'youtube_upload_batch', videos: [] })).toBe('NO_VIDEOS');
-    expect(formatYoutubeUploadBatchMarkdown({ event: 'other_event', videos: [{ url: 'https://youtu.be/abc' }] }))
-      .toBe('NO_VIDEOS');
+    expect(
+      formatYoutubeUploadBatchMarkdown({
+        event: 'youtube_upload_batch',
+        videos: [],
+      })
+    ).toBe('NO_VIDEOS');
+    expect(
+      formatYoutubeUploadBatchMarkdown({
+        event: 'other_event',
+        videos: [{ url: 'https://youtu.be/abc' }],
+      })
+    ).toBe('NO_VIDEOS');
   });
 
   it('formats one markdown block per video', () => {
@@ -69,7 +78,9 @@ describe('YouTube upload batch social copy', () => {
       .post('/api/webhooks/youtube-upload-batch')
       .send({
         event: 'youtube_upload_batch',
-        videos: [{ video_id: 'abc123', url: 'https://youtu.be/abc123', job: 'shorts' }],
+        videos: [
+          { video_id: 'abc123', url: 'https://youtu.be/abc123', job: 'shorts' },
+        ],
       });
 
     expect(response.status).toBe(200);

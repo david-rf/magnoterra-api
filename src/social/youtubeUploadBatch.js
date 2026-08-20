@@ -14,10 +14,15 @@ const instagramCaption = `Nuevo video disponible: puesta a tierra con foco en se
 
 La aplicacion de RIC N06 siempre depende del alcance y condiciones del proyecto. Mira el video y cuentanos tu caso.`;
 
-const isPresentString = (value) => typeof value === 'string' && value.trim().length > 0;
+const isPresentString = (value) =>
+  typeof value === 'string' && value.trim().length > 0;
 
 export const getPublishableVideos = (payload) => {
-  if (!payload || payload.event !== 'youtube_upload_batch' || !Array.isArray(payload.videos)) {
+  if (
+    !payload ||
+    payload.event !== 'youtube_upload_batch' ||
+    !Array.isArray(payload.videos)
+  ) {
     return [];
   }
 
