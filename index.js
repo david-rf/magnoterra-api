@@ -101,8 +101,7 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
-// Start server
-app.listen(port, async () => {
+const startServer = async () => {
   try {
     // Test database connection
     await dbPool.getPool();
@@ -116,6 +115,11 @@ app.listen(port, async () => {
     logger.error('Failed to start server:', error.message);
     process.exit(1);
   }
-});
+};
+
+// Start server
+if (env.NODE_ENV !== 'test') {
+  app.listen(port, startServer);
+}
 
 export default app; 

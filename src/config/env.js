@@ -14,6 +14,12 @@ const envSchema = z.object({
 });
 
 // Validate environment variables
-const env = envSchema.parse(process.env);
+const envInput = { ...process.env };
+
+if (envInput.NODE_ENV === 'test' && !envInput.DATABASE_URL) {
+  envInput.DATABASE_URL = 'mysql://test:test@localhost:3306/test';
+}
+
+const env = envSchema.parse(envInput);
 
 export default env;
