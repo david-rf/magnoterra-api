@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { formatYouTubeUploadBatchMarkdown } from './src/social/youtubeUploadBatch.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -63,6 +64,13 @@ app.get('/api', (req, res) => {
       api: '/api'
     }
   });
+});
+
+app.post('/api/webhooks/youtube-upload-batch', (req, res) => {
+  console.log('YouTube upload batch webhook requested');
+  const markdown = formatYouTubeUploadBatchMarkdown(req.body);
+
+  res.type('text/markdown').send(markdown);
 });
 
 // Error handling básico
