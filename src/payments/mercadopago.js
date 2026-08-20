@@ -7,7 +7,7 @@ class MercadoPagoService {
   constructor() {
     this.accessToken = process.env.MP_ACCESS_TOKEN;
     this.publicKey = process.env.MP_PUBLIC_KEY;
-    
+
     if (!this.accessToken || !this.publicKey) {
       logger.warn('Mercado Pago credentials not configured');
     }
@@ -18,12 +18,14 @@ class MercadoPagoService {
     try {
       // TODO: Implement with Mercado Pago SDK
       logger.info('Creating payment preference:', preferenceData);
-      
+
       // Placeholder response
+      const preferenceId = `pref_${Date.now()}`;
+
       return {
-        id: 'pref_' + Date.now(),
-        init_point: 'https://www.mercadopago.com/checkout/v1/redirect?pref_id=pref_' + Date.now(),
-        sandbox_init_point: 'https://sandbox.mercadopago.com/checkout/v1/redirect?pref_id=pref_' + Date.now(),
+        id: preferenceId,
+        init_point: `https://www.mercadopago.com/checkout/v1/redirect?pref_id=${preferenceId}`,
+        sandbox_init_point: `https://sandbox.mercadopago.com/checkout/v1/redirect?pref_id=${preferenceId}`,
       };
     } catch (error) {
       logger.error('Error creating payment preference:', error);
@@ -36,11 +38,11 @@ class MercadoPagoService {
     try {
       // TODO: Implement webhook validation and processing
       logger.info('Processing webhook:', webhookData);
-      
+
       // TODO: Validate signature
       // TODO: Process payment status
       // TODO: Update order status
-      
+
       return { success: true };
     } catch (error) {
       logger.error('Error processing webhook:', error);
@@ -53,7 +55,7 @@ class MercadoPagoService {
     try {
       // TODO: Implement with Mercado Pago SDK
       logger.info('Getting payment status for:', paymentId);
-      
+
       // Placeholder response
       return {
         id: paymentId,
