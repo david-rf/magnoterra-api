@@ -48,10 +48,13 @@ describe('YouTube upload batch webhook', () => {
     const linkedInCopy = getSection(
       response.text,
       '2) Copy LinkedIn empresa',
-      '3) Caption Instagram',
+      '3) Caption Instagram'
     );
     const instagramCaption = response.text
-      .slice(response.text.indexOf('3) Caption Instagram') + '3) Caption Instagram'.length)
+      .slice(
+        response.text.indexOf('3) Caption Instagram') +
+          '3) Caption Instagram'.length
+      )
       .trim();
 
     expect(linkedInCopy.length).toBeLessThanOrEqual(900);
@@ -60,7 +63,7 @@ describe('YouTube upload batch webhook', () => {
     expect(linkedInCopy).toContain('#PuestaATierra #Chile #MagnoTerra');
     expect(instagramCaption).toContain('#PuestaATierra #Chile #MagnoTerra');
     expect(`${linkedInCopy}\n${instagramCaption}`).not.toMatch(
-      /\b(?:ohms?|omega|SEC)\b|Ω/i,
+      /\b(?:ohms?|omega|SEC)\b|Ω/i
     );
     expect(linkedInCopy).toMatch(/RIC N06 segun el alcance del proyecto/);
   });

@@ -42,13 +42,11 @@ const extractJobContext = (job) => {
     return '';
   }
 
-  return cleanText([
-    job.title,
-    job.name,
-    job.type,
-    job.description,
-    job.location,
-  ].filter(Boolean).join(' - '));
+  return cleanText(
+    [job.title, job.name, job.type, job.description, job.location]
+      .filter(Boolean)
+      .join(' - ')
+  );
 };
 
 const getVideoUrl = (video) => {
@@ -98,18 +96,19 @@ const buildInstagramCaption = (video) => {
   return truncateText(caption, INSTAGRAM_LIMIT);
 };
 
-const formatVideoMarkdown = (video, index) => [
-  `### Video ${index + 1}`,
-  '',
-  '1) URL',
-  getVideoUrl(video),
-  '',
-  '2) Copy LinkedIn empresa',
-  buildLinkedInCopy(video),
-  '',
-  '3) Caption Instagram',
-  buildInstagramCaption(video),
-].join('\n');
+const formatVideoMarkdown = (video, index) =>
+  [
+    `### Video ${index + 1}`,
+    '',
+    '1) URL',
+    getVideoUrl(video),
+    '',
+    '2) Copy LinkedIn empresa',
+    buildLinkedInCopy(video),
+    '',
+    '3) Caption Instagram',
+    buildInstagramCaption(video),
+  ].join('\n');
 
 export const buildYoutubeUploadBatchMarkdown = (payload = {}) => {
   const videos = Array.isArray(payload?.videos) ? payload.videos : [];

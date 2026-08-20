@@ -19,7 +19,7 @@ describe('Database Check Endpoint', () => {
     mockDbPool.default.query.mockResolvedValue([{ ok: 1 }]);
 
     const response = await request(app).get('/db-check');
-    
+
     expect(response.status).toBe(200);
     expect(response.body).toEqual([{ ok: 1 }]);
     expect(mockDbPool.default.query).toHaveBeenCalledWith('SELECT 1 as ok');
@@ -31,7 +31,7 @@ describe('Database Check Endpoint', () => {
     mockDbPool.default.query.mockRejectedValue(new Error(errorMessage));
 
     const response = await request(app).get('/db-check');
-    
+
     expect(response.status).toBe(500);
     expect(response.body).toHaveProperty('error', 'Database connection failed');
     expect(response.body).toHaveProperty('message', errorMessage);
@@ -43,7 +43,7 @@ describe('Database Check Endpoint', () => {
     mockDbPool.default.query.mockRejectedValue(new Error(errorMessage));
 
     const response = await request(app).get('/db-check');
-    
+
     expect(response.status).toBe(500);
     expect(response.body.error).toBe('Database connection failed');
   });
