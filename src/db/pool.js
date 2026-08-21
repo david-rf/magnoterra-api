@@ -26,17 +26,21 @@ class DatabasePool {
       return this.pool;
     } catch (error) {
       logger.error('Failed to create database pool:', error.message);
-      
+
       if (this.retryCount < this.maxRetries) {
         this.retryCount++;
         const delay = Math.pow(2, this.retryCount) * 1000; // Exponential backoff
-        logger.info(`Retrying in ${delay}ms... (Attempt ${this.retryCount}/${this.maxRetries})`);
-        
-        await new Promise(resolve => setTimeout(resolve, delay));
+        logger.info(
+          `Retrying in ${delay}ms... (Attempt ${this.retryCount}/${this.maxRetries})`
+        );
+
+        await new Promise((resolve) => setTimeout(resolve, delay));
         return this.createPool();
       }
-      
-      throw new Error(`Failed to create database pool after ${this.maxRetries} attempts`);
+
+      throw new Error(
+        `Failed to create database pool after ${this.maxRetries} attempts`
+      );
     }
   }
 
