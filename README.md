@@ -200,6 +200,7 @@ magnoterra-api/
 ### Endpoints planificados
 - `POST /api/payments/create-preference` - Crear preferencia de pago
 - `POST /api/webhooks/mp` - Webhook de notificaciones
+- `POST /api/webhooks/youtube-upload-batch` - Genera markdown para videos de YouTube (`event=youtube_upload_batch`)
 
 ### Checklist de implementación
 - [ ] Instalar SDK de Mercado Pago

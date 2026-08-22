@@ -4,6 +4,10 @@ import { z } from 'zod';
 // Load environment variables
 dotenv.config();
 
+if (process.env.NODE_ENV === 'test' && !process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = 'mysql://test:test@localhost:3306/test';
+}
+
 // Environment schema validation
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
