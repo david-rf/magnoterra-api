@@ -14,6 +14,13 @@ const envSchema = z.object({
 });
 
 // Validate environment variables
-const env = envSchema.parse(process.env);
+const envInput = {
+  ...process.env,
+  ...(process.env.NODE_ENV === 'test' && !process.env.DATABASE_URL
+    ? { DATABASE_URL: 'mysql://root:password@localhost:3306/magnoterra_test' }
+    : {}),
+};
+
+const env = envSchema.parse(envInput);
 
 export default env;
