@@ -14,108 +14,122 @@ import { errorHandler, notFound } from './src/middlewares/index.js';
 // Load environment variables
 dotenv.config();
 
-const app = express();
 const port = env.PORT;
 
-// Security middleware
-app.use(helmet());
+export const createApp = () => {
+  const app = express();
 
-// CORS configuration (temporary * for MVP)
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://yourdomain.com'] // TODO: Configure production domains
-    : '*',
-  credentials: true,
-}));
+  // Security middleware
+  app.use(helmet());
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: {
-    error: 'Too many requests from this IP, please try again later.',
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-app.use('/api/', limiter);
+  // CORS configuration (temporary * for MVP)
+  app.use(cors({
+    origin: process.env.NODE_ENV === 'production' 
+      ? ['https://yourdomain.com'] // TODO: Configure production domains
+      : '*',
+    credentials: true,
+  }));
 
-// Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Logging middleware
-app.use(morgan('combined', {
-  stream: {
-    write: (message) => logger.info(message.trim()),
-  },
-}));
-
-// Health check endpoint (before API routes)
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'OK',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    environment: env.NODE_ENV,
-    version: '1.0.0',
+  // Rate limiting
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: {
+      error: 'Too many requests from this IP, please try again later.',
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
   });
-});
+  app.use('/api/', limiter);
 
-// Database connection check
-app.get('/db-check', async (req, res) => {
-  try {
-    const result = await dbPool.query('SELECT 1 as ok');
-    res.json(result);
-  } catch (error) {
-    logger.error('Database check failed:', error.message);
-    res.status(500).json({
-      error: 'Database connection failed',
-      message: error.message,
+  // Body parsing middleware
+  app.use(express.json({ limit: '10mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+  // Logging middleware
+  app.use(morgan('combined', {
+    stream: {
+      write: (message) => logger.info(message.trim()),
+    },
+  }));
+
+  // Health check endpoint (before API routes)
+  app.get('/health', (req, res) => {
+    res.status(200).json({
+      status: 'OK',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: env.NODE_ENV,
+      version: '1.0.0',
     });
-  }
-});
+  });
 
-// API routes
-app.use('/api', routes);
+  // Database connection check
+  app.get('/db-check', async (req, res) => {
+    try {
+      const result = await dbPool.query('SELECT 1 as ok');
+      res.json(result);
+    } catch (error) {
+      logger.error('Database check failed:', error.message);
+      res.status(500).json({
+        error: 'Database connection failed',
+        message: error.message,
+      });
+    }
+  });
 
-// Static files (if needed)
-app.use('/public', express.static('public'));
+  // API routes
+  app.use('/api', routes);
 
-// 404 handler
-app.use(notFound);
+  // Static files (if needed)
+  app.use('/public', express.static('public'));
 
-// Global error handler
-app.use(errorHandler);
+  // 404 handler
+  app.use(notFound);
 
-// Graceful shutdown
-process.on('SIGTERM', async () => {
-  logger.info('SIGTERM received, shutting down gracefully');
-  await dbPool.close();
-  process.exit(0);
-});
+  // Global error handler
+  app.use(errorHandler);
 
-process.on('SIGINT', async () => {
-  logger.info('SIGINT received, shutting down gracefully');
-  await dbPool.close();
-  process.exit(0);
-});
+  return app;
+};
 
-// Start server
-app.listen(port, async () => {
-  try {
-    // Test database connection
-    await dbPool.getPool();
-    
-    logger.info(`🚀 Magno Terra API server running on port ${port}`);
-    logger.info(`📊 Environment: ${env.NODE_ENV}`);
-    logger.info(`🔗 Health check: http://localhost:${port}/health`);
-    logger.info(`🔗 Database check: http://localhost:${port}/db-check`);
-    logger.info(`🔗 API base: http://localhost:${port}/api`);
-  } catch (error) {
-    logger.error('Failed to start server:', error.message);
-    process.exit(1);
-  }
-});
+const app = createApp();
+
+const startServer = () => {
+  app.listen(port, async () => {
+    try {
+      // Test database connection
+      await dbPool.getPool();
+      
+      logger.info(`🚀 Magno Terra API server running on port ${port}`);
+      logger.info(`📊 Environment: ${env.NODE_ENV}`);
+      logger.info(`🔗 Health check: http://localhost:${port}/health`);
+      logger.info(`🔗 Database check: http://localhost:${port}/db-check`);
+      logger.info(`🔗 API base: http://localhost:${port}/api`);
+    } catch (error) {
+      logger.error('Failed to start server:', error.message);
+      process.exit(1);
+    }
+  });
+};
+
+const registerShutdownHandlers = () => {
+  process.on('SIGTERM', async () => {
+    logger.info('SIGTERM received, shutting down gracefully');
+    await dbPool.close();
+    process.exit(0);
+  });
+
+  process.on('SIGINT', async () => {
+    logger.info('SIGINT received, shutting down gracefully');
+    await dbPool.close();
+    process.exit(0);
+  });
+};
+
+if (env.NODE_ENV !== 'test') {
+  registerShutdownHandlers();
+  startServer();
+}
 
 export default app; 
