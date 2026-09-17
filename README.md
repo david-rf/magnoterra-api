@@ -76,6 +76,32 @@ curl http://localhost:3000/health
 - `GET /api` - Información de la API
 - `GET /api/health` - Health check de la API
 - `GET /api/db-check` - Verificación de BD de la API
+- `POST /api/webhooks/youtube-upload-batch` - Genera markdown para videos subidos a YouTube
+
+### Webhook YouTube upload batch
+
+`POST /api/webhooks/youtube-upload-batch`
+
+Payload esperado:
+```json
+{
+  "event": "youtube_upload_batch",
+  "videos": [
+    {
+      "video_id": "abc123",
+      "url": "https://www.youtube.com/watch?v=abc123",
+      "job": "descripcion interna del video"
+    }
+  ]
+}
+```
+
+La respuesta usa `text/markdown` e incluye, por cada video:
+- URL
+- Copy LinkedIn empresa con CTA `magnoterra.cl/contacto` y hashtags `#PuestaATierra #Chile #MagnoTerra`
+- Caption Instagram
+
+Si el payload no incluye videos, responde `NO_VIDEOS`.
 
 ## 🐳 Docker
 
