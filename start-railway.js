@@ -34,7 +34,7 @@ app.get('/health', (req, res) => {
     environment: process.env.NODE_ENV || 'production',
     version: '1.0.0',
     message: 'Magno Terra API is running',
-    port: port
+    port,
   });
 });
 
@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     status: 'running',
     health: '/health',
-    environment: process.env.NODE_ENV || 'production'
+    environment: process.env.NODE_ENV || 'production',
   });
 });
 
@@ -60,17 +60,17 @@ app.get('/api', (req, res) => {
     endpoints: {
       health: '/health',
       root: '/',
-      api: '/api'
-    }
+      api: '/api',
+    },
   });
 });
 
 // Error handling básico
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   console.error('Error occurred:', err);
   res.status(500).json({ 
     error: 'Internal Server Error',
-    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong',
   });
 });
 
@@ -80,7 +80,7 @@ app.use('*', (req, res) => {
   res.status(404).json({ 
     error: 'Not Found',
     path: req.originalUrl,
-    available: ['/', '/health', '/api']
+    available: ['/', '/health', '/api'],
   });
 });
 
