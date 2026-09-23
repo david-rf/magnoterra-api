@@ -20,10 +20,11 @@ class MercadoPagoService {
       logger.info('Creating payment preference:', preferenceData);
       
       // Placeholder response
+      const preferenceId = `pref_${Date.now()}`;
       return {
-        id: 'pref_' + Date.now(),
-        init_point: 'https://www.mercadopago.com/checkout/v1/redirect?pref_id=pref_' + Date.now(),
-        sandbox_init_point: 'https://sandbox.mercadopago.com/checkout/v1/redirect?pref_id=pref_' + Date.now(),
+        id: preferenceId,
+        init_point: `https://www.mercadopago.com/checkout/v1/redirect?pref_id=${preferenceId}`,
+        sandbox_init_point: `https://sandbox.mercadopago.com/checkout/v1/redirect?pref_id=${preferenceId}`,
       };
     } catch (error) {
       logger.error('Error creating payment preference:', error);
